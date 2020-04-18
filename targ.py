@@ -6,6 +6,9 @@ import typing as t
 from docstring_parser import parse, Docstring
 
 
+__VERSION__ = "0.1.0"
+
+
 @dataclass
 class Arguments:
     args: t.List[str] = field(default_factory=list)
