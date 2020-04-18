@@ -23,7 +23,7 @@ class Command:
 
     def call_with(self, arg_class: Arguments):
         """
-        Extract the function args from the command line arguments.
+        Call the command function with the given arguments.
         """
         annotations = t.get_type_hints(self.command)
 
@@ -51,7 +51,7 @@ class CLI:
     Example usage:
 
     cli = CLI()
-    cli.register()
+    cli.register(some_function)
     """
 
     description: str = "Targ CLI"
@@ -67,7 +67,7 @@ class CLI:
 
     def get_cleaned_args(self) -> t.List[str]:
         """
-        Remove any redundant commands.
+        Remove any redundant arguments.
         """
         output: t.List[str] = []
         for index, arg in enumerate(argv):
