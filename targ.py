@@ -12,7 +12,7 @@ __VERSION__ = "0.1.0"
 @dataclass
 class Arguments:
     args: t.List[str] = field(default_factory=list)
-    kwargs: t.Dict[str, str] = field(default_factory=dict)
+    kwargs: t.Dict[str, t.Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -90,7 +90,16 @@ class CLI:
         arguments = Arguments()
         for arg_str in args:
             if arg_str.startswith("--"):
-                name, value = arg_str[2:].split("=", 1)
+                components = arg_str[2:].split("=", 1)
+                if len(components) == 2:
+                    # For value arguments, like --user=bob
+                    name = components[0]
+                    value: t.Any = components[1]
+                else:
+                    # For flags, like --verbose.
+                    name = components[0]
+                    value = True
+
                 arguments.kwargs[name] = value
             else:
                 arguments.args.append(arg_str)

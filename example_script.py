@@ -1,5 +1,3 @@
-import typing as t
-
 from targ import CLI
 
 
@@ -26,7 +24,7 @@ def add(a: int, b: int):
     print(a + b)
 
 
-def say_hello(name: str, greeting: t.Optional[str] = "hello"):
+def say_hello(name: str, greeting: str = "hello"):
     """
     Greet someone.
 
@@ -44,9 +42,23 @@ def say_hello(name: str, greeting: t.Optional[str] = "hello"):
     print(f"{greeting} {name}")
 
 
+def print_pi(precise: bool = False):
+    """
+    Print out the digits of Pi.
+
+    :param precise:
+        If set, the more digits are printed out.
+    """
+    if precise:
+        print("3.14159265")
+    else:
+        print("3.14")
+
+
 if __name__ == "__main__":
     cli = CLI()
     cli.register(say_hello)
     cli.register(echo)
     cli.register(add)
+    cli.register(print_pi)
     cli.run()
