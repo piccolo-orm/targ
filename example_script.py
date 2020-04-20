@@ -47,7 +47,7 @@ def print_pi(precise: bool = False):
     Print out the digits of Pi.
 
     :param precise:
-        If set, the more digits are printed out.
+        If set, then more digits are printed out.
     """
     if precise:
         print("3.14159265")

@@ -32,7 +32,7 @@ setup(
     author_email="dan@dantownsend.co.uk",
     python_requires=">=3.8.0",
     url="https://github.com/piccolo-orm/targ/",
-    py_modules=["targ"],
+    packages=["targ"],
     data_files=[("", ["py.typed"])],
     install_requires=REQUIREMENTS,
     license="MIT",
