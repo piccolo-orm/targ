@@ -6,6 +6,7 @@ Targ currently supports basic Python types:
  * str
  * int
  * bool
+ * float
 
 You must specify a type annotation for all function arguments, so Targ can
 convert the input it receives from the command line into the correct type.
@@ -18,14 +19,14 @@ str
     def say_hello(name: str):
         print(f'hello {name}')
 
-Ways to call it:
+Example usage:
 
 .. code-block:: bash
 
-    >>> python main.py say_hello --name=bob
+    >>> python main.py say_hello bob
     'bob'
 
-    >>> python main.py say_hello bob
+    >>> python main.py say_hello --name=bob
     'bob'
 
 When your string contains spaces, use quotation marks:
@@ -43,7 +44,7 @@ int
     def add(a: int, b: int):
         print(a + b)
 
-Ways to call it:
+Example usage:
 
 .. code-block:: bash
 
@@ -64,7 +65,7 @@ bool
         else:
             print("3.14")
 
-Ways to call it:
+Example usage:
 
 .. code-block:: bash
 
@@ -87,3 +88,18 @@ You can use `t` as an alias for `true`, and likewise `f` as an alias for
 
     >>> python main.py print_pi --precise=t
     3.14159265
+
+float
+-----
+
+.. code-block:: python
+
+    def compound_interest(interest_rate: float, years: int):
+        print(((interest_rate + 1) ** years) - 1)
+
+Example usage:
+
+.. code-block:: bash
+
+    >>> python main.py compound_interest 0.05 5
+    0.27628156250000035

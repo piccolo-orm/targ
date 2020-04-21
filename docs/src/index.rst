@@ -52,3 +52,4 @@ And from the command line:
    docstrings.rst
    cli.rst
    related_projects.rst
+   alternatives.rst

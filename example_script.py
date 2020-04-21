@@ -55,10 +55,23 @@ def print_pi(precise: bool = False):
         print("3.14")
 
 
+def compound_interest(interest_rate: float, years: int):
+    """
+    Work out the compound interest over the given number of years.
+
+    :param interest_rate:
+        The annual interest rate e.g. 0.05
+    :param years:
+        The number of years over which to compound.
+    """
+    print(((interest_rate + 1) ** years) - 1)
+
+
 if __name__ == "__main__":
     cli = CLI()
     cli.register(say_hello)
     cli.register(echo)
     cli.register(add)
     cli.register(print_pi)
+    cli.register(compound_interest)
     cli.run()
