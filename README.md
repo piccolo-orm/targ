@@ -35,3 +35,7 @@ And from the command line:
 >>> python main.py add 1 1
 2
 ```
+
+## Documentation
+
+The full documentation is available on [Read the Docs](https://targ.readthedocs.io/en/latest/index.html).
