@@ -11,7 +11,7 @@ from docstring_parser import parse, Docstring, DocstringParam
 from .colored_output import print_colored, Color
 
 
-__VERSION__ = "0.1.0"
+__VERSION__ = "0.1.1"
 
 
 @dataclass
