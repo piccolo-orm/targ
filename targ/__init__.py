@@ -8,7 +8,11 @@ import typing as t
 
 from docstring_parser import parse, Docstring, DocstringParam
 
-from .colored_output import print_colored, Color
+from .format import (
+    Color,
+    format_text,
+    get_underline,
+)
 
 
 __VERSION__ = "0.1.1"
@@ -28,13 +32,6 @@ class Command:
         self.command_docstring: Docstring = parse(self.command.__doc__)
         self.annotations = t.get_type_hints(self.command)
         self.signature = inspect.signature(self.command)
-
-    def fixed_width(self, text: str, min_length: int = 20) -> str:
-        length = len(text)
-        if length < min_length:
-            return text + "".join([" " for _ in range(min_length - length)])
-        else:
-            return text
 
     @cached_property
     def description(self) -> str:
@@ -71,18 +68,21 @@ class Command:
 
         for arg_name, annotation in self.annotations.items():
             arg_description = self._get_arg_description(arg_name=arg_name)
-            padded_arg_name = self.fixed_width(arg_name, min_length=10)
 
             arg_default = self._get_arg_default(arg_name=arg_name)
             arg_default_json = json.dumps(arg_default)
 
             default_str = (
-                f"(default={arg_default_json})"
+                f"[default={arg_default_json}]"
                 if arg_default is not None
                 else ""
             )
 
-            output.append(f"{padded_arg_name} {arg_description} {default_str}")
+            output.append(
+                format_text(arg_name, color=Color.cyan) + f" {default_str}"
+            )
+            output.append(arg_description)
+            output.append("")
 
         return "\n".join(output)
 
@@ -93,16 +93,20 @@ class Command:
 
         some_command required_arg [--optional_arg=value] [--some_flag]
         """
-        output = [self.command.__name__]
+        output = [format_text(self.command.__name__, color=Color.green)]
 
         for arg_name, parameter in self.signature.parameters.items():
             if parameter.default is inspect._empty:  # type: ignore
-                output.append(arg_name)
+                output.append(format_text(arg_name, color=Color.cyan))
             else:
                 if parameter.default is False:
-                    output.append(f"[--{arg_name}]")
+                    output.append(
+                        format_text(f"[--{arg_name}]", color=Color.cyan)
+                    )
                 else:
-                    output.append(f"[--{arg_name}=X]")
+                    output.append(
+                        format_text(f"[--{arg_name}=X]", color=Color.cyan)
+                    )
 
         return " ".join(output)
 
@@ -111,17 +115,22 @@ class Command:
         Call the command function with the given arguments.
         """
         if arg_class.kwargs.get("help"):
-            print("")
-            print_colored(self.command.__name__, bold=True)
-            print_colored(self.description)
+            name = self.command.__name__
 
             print("")
-            print_colored("Usage:", bold=True)
-            print_colored(self.usage)
+            print(name)
+            print(get_underline(len(name)))
+            print(self.description)
+
+            print("")
+            print("Usage")
+            print(get_underline(5, character="-"))
+            print(self.usage)
             print("")
 
-            print_colored("Args:", bold=True)
-            print_colored(self.arguments_description)
+            print("Args")
+            print(get_underline(4, character="-"))
+            print(self.arguments_description)
             print("")
 
             return
@@ -162,17 +171,28 @@ class CLI:
         self.commands.append(Command(command))
 
     def get_help_text(self) -> str:
-        return "\n".join(
-            [
-                self.description,
-                (
-                    "Enter the name of a command followed by --help to learn "
-                    "more."
-                ),
-                "",
-            ]
-            + [f"{i.command.__name__}: {i.description}" for i in self.commands]
-        )
+        lines = [
+            "",
+            self.description,
+            get_underline(len(self.description)),
+            (
+                "Enter the name of a command followed by --help to learn "
+                "more."
+            ),
+            "",
+            "",
+            "Commands",
+            "--------",
+        ]
+
+        for command in self.commands:
+            lines.append(
+                format_text(command.command.__name__, color=Color.green)
+            )
+            lines.append(command.description)
+            lines.append("")
+
+        return "\n".join(lines)
 
     def get_cleaned_args(self) -> t.List[str]:
         """
@@ -238,6 +258,6 @@ class CLI:
                 arg_class = self.get_arg_class(args)
                 command.call_with(arg_class)
             except Exception as exception:
-                print_colored("The command failed.", color=Color.red)
+                print(format_text("The command failed.", color=Color.red))
                 print(exception)
                 sys.exit(1)
