@@ -27,11 +27,21 @@ class Arguments:
 @dataclass
 class Command:
     command: t.Callable
+    group_name: t.Optional[str] = None
 
     def __post_init__(self):
         self.command_docstring: Docstring = parse(self.command.__doc__)
         self.annotations = t.get_type_hints(self.command)
         self.signature = inspect.signature(self.command)
+        self.command_name = self.command.__name__
+
+    @cached_property
+    def full_name(self):
+        return (
+            f"{self.group_name} {self.command_name}"
+            if self.group_name
+            else self.command_name
+        )
 
     @cached_property
     def description(self) -> str:
@@ -93,7 +103,7 @@ class Command:
 
         some_command required_arg [--optional_arg=value] [--some_flag]
         """
-        output = [format_text(self.command.__name__, color=Color.green)]
+        output = [format_text(self.command_name, color=Color.green)]
 
         for arg_name, parameter in self.signature.parameters.items():
             if parameter.default is inspect._empty:  # type: ignore
@@ -110,29 +120,29 @@ class Command:
 
         return " ".join(output)
 
+    def print_help(self):
+        print("")
+        print(self.command_name)
+        print(get_underline(len(self.command_name)))
+        print(self.description)
+
+        print("")
+        print("Usage")
+        print(get_underline(5, character="-"))
+        print(self.usage)
+        print("")
+
+        print("Args")
+        print(get_underline(4, character="-"))
+        print(self.arguments_description)
+        print("")
+
     def call_with(self, arg_class: Arguments):
         """
         Call the command function with the given arguments.
         """
         if arg_class.kwargs.get("help"):
-            name = self.command.__name__
-
-            print("")
-            print(name)
-            print(get_underline(len(name)))
-            print(self.description)
-
-            print("")
-            print("Usage")
-            print(get_underline(5, character="-"))
-            print(self.usage)
-            print("")
-
-            print("Args")
-            print(get_underline(4, character="-"))
-            print(self.arguments_description)
-            print("")
-
+            self.print_help()
             return
 
         annotations = t.get_type_hints(self.command)
@@ -167,8 +177,18 @@ class CLI:
     description: str = "Targ CLI"
     commands: t.List[Command] = field(default_factory=list)
 
-    def register(self, command: t.Callable, group: t.Optional[str] = None):
-        self.commands.append(Command(command))
+    def _validate_group_name(self, group_name: str) -> bool:
+        if " " in group_name:
+            return False
+        return True
+
+    def register(
+        self, command: t.Callable, group_name: t.Optional[str] = None
+    ):
+        if group_name and not self._validate_group_name(group_name):
+            raise ValueError("The group name should not contain spaces.")
+
+        self.commands.append(Command(command=command, group_name=group_name))
 
     def get_help_text(self) -> str:
         lines = [
@@ -186,9 +206,7 @@ class CLI:
         ]
 
         for command in self.commands:
-            lines.append(
-                format_text(command.command.__name__, color=Color.green)
-            )
+            lines.append(format_text(command.full_name, color=Color.green))
             lines.append(command.description)
             lines.append("")
 
@@ -206,9 +224,13 @@ class CLI:
                 output.append(arg)
         return output
 
-    def get_command(self, command_name: str) -> t.Optional[Command]:
+    def get_command(
+        self, command_name: str, group_name: t.Optional[str] = None
+    ) -> t.Optional[Command]:
         for command in self.commands:
-            if command.command.__name__ == command_name:
+            if command.command_name == command_name:
+                if group_name and command.group_name != group_name:
+                    continue
                 return command
         return None
 
@@ -240,24 +262,38 @@ class CLI:
         return arguments
 
     def run(self):
-        args = self.get_cleaned_args()
+        cleaned_args = self.get_cleaned_args()
 
-        if len(args) == 0:
+        if len(cleaned_args) == 0:
             print(self.get_help_text())
             return
 
-        command_name = args[0]
-        args = args[1:]
+        command_name = cleaned_args[0]
 
         command = self.get_command(command_name=command_name)
+
+        if command:
+            cleaned_args = cleaned_args[1:]
+        else:
+            # See if it belongs to a group:
+            if len(cleaned_args) >= 2:
+                group_name = cleaned_args[0]
+                command_name = cleaned_args[1]
+                command = self.get_command(
+                    command_name=command_name, group_name=group_name
+                )
+                if command:
+                    cleaned_args = cleaned_args[2:]
+
         if not command:
             print(f"Unrecognised command - {command_name}")
             print(self.get_help_text())
         else:
             try:
-                arg_class = self.get_arg_class(args)
+                arg_class = self.get_arg_class(cleaned_args)
                 command.call_with(arg_class)
             except Exception as exception:
                 print(format_text("The command failed.", color=Color.red))
                 print(exception)
+                command.print_help()
                 sys.exit(1)

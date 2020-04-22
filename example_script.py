@@ -67,6 +67,16 @@ def compound_interest(interest_rate: float, years: int):
     print(((interest_rate + 1) ** years) - 1)
 
 
+def create(username: str):
+    """
+    Create a new user.
+
+    :param username:
+        The new user's username.
+    """
+    print(f"Creating {username}")
+
+
 if __name__ == "__main__":
     cli = CLI()
     cli.register(say_hello)
@@ -74,4 +84,5 @@ if __name__ == "__main__":
     cli.register(add)
     cli.register(print_pi)
     cli.register(compound_interest)
+    cli.register(create, group_name="user")
     cli.run()
