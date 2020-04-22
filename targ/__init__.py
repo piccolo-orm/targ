@@ -1,7 +1,6 @@
 from __future__ import annotations
 import asyncio
 from dataclasses import dataclass, field
-from functools import cached_property
 import inspect
 import json
 import sys
@@ -16,7 +15,7 @@ from .format import (
 )
 
 
-__VERSION__ = "0.1.2"
+__VERSION__ = "0.1.3"
 
 
 @dataclass
@@ -36,7 +35,7 @@ class Command:
         self.signature = inspect.signature(self.command)
         self.command_name = self.command.__name__
 
-    @cached_property
+    @property
     def full_name(self):
         return (
             f"{self.group_name} {self.command_name}"
@@ -44,10 +43,15 @@ class Command:
             else self.command_name
         )
 
-    @cached_property
+    @property
     def description(self) -> str:
         docstring: Docstring = parse(self.command.__doc__)
-        return docstring.short_description
+        return " ".join(
+            [
+                docstring.short_description or "",
+                docstring.long_description or "",
+            ]
+        )
 
     def _get_docstring_param(self, arg_name) -> t.Optional[DocstringParam]:
         for param in self.command_docstring.params:
@@ -70,7 +74,7 @@ class Command:
                 return default
         return None
 
-    @cached_property
+    @property
     def arguments_description(self) -> str:
         """
         :returns: A string containing a description for each argument.
@@ -97,7 +101,7 @@ class Command:
 
         return "\n".join(output)
 
-    @cached_property
+    @property
     def usage(self) -> str:
         """
         Example:
@@ -181,6 +185,19 @@ class CLI:
     description: str = "Targ CLI"
     commands: t.List[Command] = field(default_factory=list)
 
+    @property
+    def group_names(self) -> t.List[str]:
+        return [i.group_name for i in self.commands if i.group_name]
+
+    def command_exists(self, group_name: str, command_name: str) -> bool:
+        for command in self.commands:
+            if (
+                command.group_name == group_name
+                and command.command_name == command_name
+            ):
+                return True
+        return False
+
     def _validate_group_name(self, group_name: str) -> bool:
         if " " in group_name:
             return False
@@ -220,13 +237,7 @@ class CLI:
         """
         Remove any redundant arguments.
         """
-        output: t.List[str] = []
-        for index, arg in enumerate(sys.argv):
-            if arg.endswith(".py") and index == 0:
-                continue
-            else:
-                output.append(arg)
-        return output
+        return sys.argv[1:]
 
     def get_command(
         self, command_name: str, group_name: t.Optional[str] = None
