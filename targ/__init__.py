@@ -16,7 +16,7 @@ from .format import (
 )
 
 
-__VERSION__ = "0.1.1"
+__VERSION__ = "0.1.2"
 
 
 @dataclass
