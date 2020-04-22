@@ -36,6 +36,29 @@ And from the command line:
 2
 ```
 
+To get documentation:
+
+```bash
+>>> python main.py add --help
+
+add
+===
+Add the two numbers.
+
+Usage
+-----
+add a b
+
+Args
+----
+a
+The first number.
+
+b
+The second number.
+
+```
+
 ## Documentation
 
 The full documentation is available on [Read the Docs](https://targ.readthedocs.io/en/latest/index.html).

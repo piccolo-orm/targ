@@ -42,6 +42,28 @@ And from the command line:
    >>> python main.py add 1 1
    2
 
+To get documentation:
+
+.. code-block:: bash
+
+   >>> python main.py add --help
+
+   add
+   ===
+   Add the two numbers.
+
+   Usage
+   -----
+   add a b
+
+   Args
+   ----
+   a
+   The first number.
+
+   b
+   The second number.
+
 
 .. toctree::
    :maxdepth: 2
