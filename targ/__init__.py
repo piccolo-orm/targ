@@ -1,4 +1,5 @@
 from __future__ import annotations
+import asyncio
 from dataclasses import dataclass, field
 from functools import cached_property
 import inspect
@@ -160,7 +161,10 @@ class Command:
             if callable(annotation):
                 kwargs[kwarg_key] = annotation(arg)
 
-        self.command(**kwargs)
+        if inspect.iscoroutinefunction(self.command):
+            asyncio.run(self.command(**kwargs))
+        else:
+            self.command(**kwargs)
 
 
 @dataclass

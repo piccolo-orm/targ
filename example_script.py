@@ -1,3 +1,5 @@
+import asyncio
+
 from targ import CLI
 
 
@@ -77,6 +79,18 @@ def create(username: str):
     print(f"Creating {username}")
 
 
+async def timer(seconds: int):
+    """
+    Countdown for a number of seconds.
+
+    :param seconds:
+        The number of seconds to countdown.
+    """
+    print(f"Sleeping for {seconds}")
+    await asyncio.sleep(seconds)
+    print("Finished")
+
+
 if __name__ == "__main__":
     cli = CLI()
     cli.register(say_hello)
@@ -85,4 +99,5 @@ if __name__ == "__main__":
     cli.register(print_pi)
     cli.register(compound_interest)
     cli.register(create, group_name="user")
+    cli.register(timer)
     cli.run()

@@ -8,19 +8,39 @@ You can register as many functions as you like with the `CLI` instance.
 
 .. code-block:: python
 
-   from targ import CLI
+    from targ import CLI
 
 
-   def add(a: int, b: int):
-      print(a + b)
+    def add(a: int, b: int):
+        print(a + b)
 
 
-   def subtract(a: int, b: int):
-      print(a - b)
+    def subtract(a: int, b: int):
+        print(a - b)
+
+
+    if __name__ == "__main__":
+        cli = CLI()
+        cli.register(add)
+        cli.register(subtract)
+        cli.run()
+
+You can also register coroutines, as well as normal functions:
+
+.. code-block:: python
+
+    import asyncio
+
+    from targ import CLI
+
+
+    async def timer(seconds: int):
+        print(f"Sleeping for {seconds}")
+        await asyncio.sleep(seconds)
+        print("Finished")
 
 
    if __name__ == "__main__":
       cli = CLI()
-      cli.register(add)
-      cli.register(subtract)
+      cli.register(timer)
       cli.run()
