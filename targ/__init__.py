@@ -94,7 +94,8 @@ class Command:
             output.append(
                 format_text(arg_name, color=Color.cyan) + f" {default_str}"
             )
-            output.append(arg_description)
+            if arg_description:
+                output.append(arg_description)
             output.append("")
 
         return "\n".join(output)
@@ -106,7 +107,7 @@ class Command:
 
         some_command required_arg [--optional_arg=value] [--some_flag]
         """
-        output = [format_text(self.command_name, color=Color.green)]
+        output = [format_text(self.command_name or "", color=Color.green)]
 
         for arg_name, parameter in self.signature.parameters.items():
             if parameter.default is inspect._empty:  # type: ignore
