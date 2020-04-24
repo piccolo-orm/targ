@@ -100,4 +100,5 @@ if __name__ == "__main__":
     cli.register(compound_interest)
     cli.register(create, group_name="user")
     cli.register(timer)
+    cli.register(add, command_name="sum")
     cli.run()

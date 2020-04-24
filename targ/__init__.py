@@ -8,11 +8,7 @@ import typing as t
 
 from docstring_parser import parse, Docstring, DocstringParam
 
-from .format import (
-    Color,
-    format_text,
-    get_underline,
-)
+from .format import Color, format_text, get_underline
 
 
 __VERSION__ = "0.1.3"
@@ -28,12 +24,14 @@ class Arguments:
 class Command:
     command: t.Callable
     group_name: t.Optional[str] = None
+    command_name: t.Optional[str] = None
 
     def __post_init__(self):
         self.command_docstring: Docstring = parse(self.command.__doc__)
         self.annotations = t.get_type_hints(self.command)
         self.signature = inspect.signature(self.command)
-        self.command_name = self.command.__name__
+        if not self.command_name:
+            self.command_name = self.command.__name__
 
     @property
     def full_name(self):
@@ -204,12 +202,21 @@ class CLI:
         return True
 
     def register(
-        self, command: t.Callable, group_name: t.Optional[str] = None
+        self,
+        command: t.Callable,
+        group_name: t.Optional[str] = None,
+        command_name: t.Optional[str] = None,
     ):
         if group_name and not self._validate_group_name(group_name):
             raise ValueError("The group name should not contain spaces.")
 
-        self.commands.append(Command(command=command, group_name=group_name))
+        self.commands.append(
+            Command(
+                command=command,
+                group_name=group_name,
+                command_name=command_name,
+            )
+        )
 
     def get_help_text(self) -> str:
         lines = [

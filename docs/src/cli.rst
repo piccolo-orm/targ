@@ -67,3 +67,13 @@ And then call them as follows:
 
     python main.py greetings say_hello 'bob'
     python main.py maths add 1 2
+
+Overriding the command name
+---------------------------
+
+By default the command name is the name of the function being registered.
+However, you can choose to override it:
+
+.. code-block:: python
+
+    cli.register(add, command_name='sum')
