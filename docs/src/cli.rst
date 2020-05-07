@@ -77,3 +77,13 @@ However, you can choose to override it:
 .. code-block:: python
 
     cli.register(add, command_name='sum')
+
+Traceback
+---------
+
+By default, targ will print out an abbreviated error message if it encounters
+a problem. To see the full Python traceback, pass in the `trace` argument.
+
+.. code-block:: bash
+
+    python main.py maths add 1 'abc' --trace

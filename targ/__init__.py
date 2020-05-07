@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 import inspect
 import json
 import sys
+import traceback
 import typing as t
 
 from docstring_parser import parse, Docstring, DocstringParam
@@ -318,5 +319,9 @@ class CLI:
             except Exception as exception:
                 print(format_text("The command failed.", color=Color.red))
                 print(exception)
+
+                if "--trace" in cleaned_args:
+                    print(traceback.format_exc())
+
                 command.print_help()
                 sys.exit(1)
