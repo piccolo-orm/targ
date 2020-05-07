@@ -1,3 +1,7 @@
+0.1.5
+=====
+Added --trace argument for getting Python traceback on error.
+
 0.1.4
 =====
 Can override the command name.
