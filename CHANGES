@@ -1,3 +1,7 @@
+0.1.6
+=====
+Improving appearance when a command has no args.
+
 0.1.5
 =====
 Added --trace argument for getting Python traceback on error.

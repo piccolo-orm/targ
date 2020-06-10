@@ -1,2 +1,2 @@
 colorama==0.4.3
-docstring-parser==0.6.1
+docstring-parser==0.7.1
