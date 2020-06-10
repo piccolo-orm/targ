@@ -139,7 +139,10 @@ class Command:
 
         print("Args")
         print(get_underline(4, character="-"))
-        print(self.arguments_description)
+        if self.arguments_description:
+            print(self.arguments_description)
+        else:
+            print("No args")
         print("")
 
     def call_with(self, arg_class: Arguments):
