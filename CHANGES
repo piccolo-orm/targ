@@ -1,3 +1,7 @@
+0.1.7
+=====
+Loosening colorama dependency version.
+
 0.1.6
 =====
 Improving appearance when a command has no args.
