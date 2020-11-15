@@ -1,3 +1,7 @@
+0.1.8
+=====
+Fixing py.typed.
+
 0.1.7
 =====
 Loosening colorama dependency version.
