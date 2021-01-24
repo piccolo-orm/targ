@@ -346,8 +346,9 @@ class CLI:
                 return
 
             command_name = cleaned_args[0]
-            cleaned_args = cleaned_args[1:]
             command = self.get_command(command_name=command_name)
+            if command:
+                cleaned_args = cleaned_args[1:]
 
         if not command:
             # See if it belongs to a group:
