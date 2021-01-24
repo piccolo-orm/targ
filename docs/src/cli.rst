@@ -87,3 +87,29 @@ a problem. To see the full Python traceback, pass in the `trace` argument.
 .. code-block:: bash
 
     python main.py maths add 1 'abc' --trace
+
+Solo mode
+---------
+
+Sometimes you'll just want to register a single command with your CLI, in which
+case, specifying the command name is redundant.
+
+.. code-block:: python
+
+    from targ import CLI
+
+
+    def add(a: int, b: int):
+        print(a + b)
+
+
+    if __name__ == "__main__":
+        cli = CLI()
+        cli.register(add)
+        cli.run(solo=True)
+
+You can then omit the command name:
+
+.. code-block:: bash
+
+    python main.py 1 1
