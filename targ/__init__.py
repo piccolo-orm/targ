@@ -328,6 +328,7 @@ class CLI:
 
         """
         cleaned_args = self.get_cleaned_args()
+        command: t.Optional[Command] = None
 
         if solo:
             if not self._can_run_in_solo_mode:
@@ -337,7 +338,7 @@ class CLI:
                 )
                 return
             command_name = ""
-            command: t.Optional[Command] = self.commands[0]
+            command = self.commands[0]
             command.solo = True
         else:
             if len(cleaned_args) == 0:
