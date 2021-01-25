@@ -12,7 +12,7 @@ from docstring_parser import parse, Docstring, DocstringParam  # type: ignore
 from .format import Color, format_text, get_underline
 
 
-__VERSION__ = "0.1.8"
+__VERSION__ = "0.1.9"
 
 
 @dataclass
