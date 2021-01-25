@@ -7,7 +7,7 @@ import sys
 import traceback
 import typing as t
 
-from docstring_parser import parse, Docstring, DocstringParam
+from docstring_parser import parse, Docstring, DocstringParam  # type: ignore
 
 from .format import Color, format_text, get_underline
 
