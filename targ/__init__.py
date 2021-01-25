@@ -206,8 +206,12 @@ class CLI:
                 return True
         return False
 
-    def _validate_group_name(self, group_name: str) -> bool:
-        if " " in group_name:
+    def _validate_name(self, name: str) -> bool:
+        """
+        Any custom names provided by user should not contain spaces (i.e.
+        command names and group names).
+        """
+        if " " in name:
             return False
         return True
 
@@ -234,8 +238,11 @@ class CLI:
             here.
 
         """
-        if group_name and not self._validate_group_name(group_name):
+        if group_name and not self._validate_name(group_name):
             raise ValueError("The group name should not contain spaces.")
+
+        if command_name and not self._validate_name(command_name):
+            raise ValueError("The command name should not contain spaces.")
 
         self.commands.append(
             Command(

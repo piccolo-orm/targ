@@ -70,3 +70,19 @@ class CLITest(TestCase):
         with patch("builtins.print", side_effect=print_) as print_mock:
             cli.run()
             print_mock.assert_called_with(3)
+
+    def test_invalid_group_name(self):
+        """
+        Make sure a command is run correctly, when the command has been
+        registered in a group.
+        """
+        with self.assertRaises(ValueError):
+            CLI().register(add, group_name="contains spaces")
+
+    def test_invalid_app_name(self):
+        """
+        Make sure a command is run correctly, when the command has been
+        registered in a group.
+        """
+        with self.assertRaises(ValueError):
+            CLI().register(add, command_name="contains spaces")
