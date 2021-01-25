@@ -25,4 +25,4 @@ jobs:
       - name: Lint with mypy
         run: mypy targ
       - name: Test with pytest
-        run: pytest targ
+        run: pytest .
