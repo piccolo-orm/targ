@@ -7,7 +7,7 @@ import sys
 import traceback
 import typing as t
 
-from docstring_parser import parse, Docstring, DocstringParam
+from docstring_parser import parse, Docstring, DocstringParam  # type: ignore
 
 from .format import Color, format_text, get_underline
 
@@ -31,6 +31,7 @@ class Command:
         self.command_docstring: Docstring = parse(self.command.__doc__)
         self.annotations = t.get_type_hints(self.command)
         self.signature = inspect.signature(self.command)
+        self.solo = False
         if not self.command_name:
             self.command_name = self.command.__name__
 
@@ -108,7 +109,11 @@ class Command:
 
         some_command required_arg [--optional_arg=value] [--some_flag]
         """
-        output = [format_text(self.command_name or "", color=Color.green)]
+        if self.solo:
+            output = []
+        else:
+            command_name = self.command_name or ""
+            output = [format_text(command_name, color=Color.green)]
 
         for arg_name, parameter in self.signature.parameters.items():
             if parameter.default is inspect._empty:  # type: ignore
@@ -201,8 +206,12 @@ class CLI:
                 return True
         return False
 
-    def _validate_group_name(self, group_name: str) -> bool:
-        if " " in group_name:
+    def _validate_name(self, name: str) -> bool:
+        """
+        Any custom names provided by user should not contain spaces (i.e.
+        command names and group names).
+        """
+        if " " in name:
             return False
         return True
 
@@ -211,9 +220,29 @@ class CLI:
         command: t.Callable,
         group_name: t.Optional[str] = None,
         command_name: t.Optional[str] = None,
+        root=False,
     ):
-        if group_name and not self._validate_group_name(group_name):
+        """
+        Register a function or coroutine as a CLI command.
+
+        :param command:
+            The function or coroutine to register as a CLI command.
+        :param group_name:
+            If specified, the CLI command will belong to a group. When calling
+            a command which belongs to a group, it must be prefixed with the
+            `group_name`. For example
+            `python my_file.py group_name command_name`.
+        :param command_name:
+            By default, the name of the CLI command will be the same as the
+            function or coroutine which is being called. You can override this
+            here.
+
+        """
+        if group_name and not self._validate_name(group_name):
             raise ValueError("The group name should not contain spaces.")
+
+        if command_name and not self._validate_name(command_name):
+            raise ValueError("The command name should not contain spaces.")
 
         self.commands.append(
             Command(
@@ -288,20 +317,47 @@ class CLI:
                 arguments.args.append(value)
         return arguments
 
-    def run(self):
+    @property
+    def _can_run_in_solo_mode(self) -> bool:
+        return len(self.commands) == 1
+
+    def run(self, solo: bool = False):
+        """
+        Run the CLI.
+
+        :param solo:
+            By default, a command name must be given when running the CLI, for
+            example `python my_file.py command_name`. In some situations, you
+            may only have a single command registered with the CLI, so passing
+            in the command name is redundant. If `solo=True`, you can omit the
+            command name i.e. `python my_file.py`, and Targ will automatically
+            call the single registered command.
+
+        """
         cleaned_args = self.get_cleaned_args()
+        command: t.Optional[Command] = None
 
-        if len(cleaned_args) == 0:
-            print(self.get_help_text())
-            return
-
-        command_name = cleaned_args[0]
-
-        command = self.get_command(command_name=command_name)
-
-        if command:
-            cleaned_args = cleaned_args[1:]
+        if solo:
+            if not self._can_run_in_solo_mode:
+                print(
+                    "Error - solo mode is only allowed if a single command is "
+                    "registered with the CLI."
+                )
+                return
+            command_name = ""
+            command = self.commands[0]
+            command.solo = True
         else:
+            if len(cleaned_args) == 0:
+                print(self.get_help_text())
+                return
+
+            command_name = cleaned_args[0]
+            command = self.get_command(command_name=command_name)
+            if command:
+                cleaned_args = cleaned_args[1:]
+
+        if not command:
             # See if it belongs to a group:
             if len(cleaned_args) >= 2:
                 group_name = cleaned_args[0]
@@ -312,10 +368,7 @@ class CLI:
                 if command:
                     cleaned_args = cleaned_args[2:]
 
-        if not command:
-            print(f"Unrecognised command - {command_name}")
-            print(self.get_help_text())
-        else:
+        if command:
             try:
                 arg_class = self.get_arg_class(cleaned_args)
                 command.call_with(arg_class)
@@ -328,3 +381,6 @@ class CLI:
 
                 command.print_help()
                 sys.exit(1)
+        else:
+            print(f"Unrecognised command - {command_name}")
+            print(self.get_help_text())
