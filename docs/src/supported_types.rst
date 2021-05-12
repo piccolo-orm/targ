@@ -7,6 +7,8 @@ Targ currently supports basic Python types:
  * int
  * bool
  * float
+ * Decimal
+ * Optional
 
 You must specify a type annotation for all function arguments, so Targ can
 convert the input it receives from the command line into the correct type.
@@ -103,3 +105,47 @@ Example usage:
 
     >>> python main.py compound_interest 0.05 5
     0.27628156250000035
+
+Decimal
+-------
+
+.. code-block:: python
+
+    from decimal import Decimal
+
+    def compound_interest(interest_rate: Decimal, years: int):
+        print(((interest_rate + 1) ** years) - 1)
+
+Example usage:
+
+.. code-block:: bash
+
+    >>> python main.py compound_interest 0.05 5
+    0.2762815625
+
+Optional
+--------
+
+.. code-block:: python
+
+    from typing import Optional
+
+    def print_address(
+        number: int, street: str, postcode: str, city: Optional[str] = None
+    ):
+      address = f"{number} {street}"
+      if city is not None:
+          address += f", {city}"
+      address += f", {postcode}"
+
+      print(address)
+
+Example usage:
+
+.. code-block:: bash
+
+    >>> python print_address --number=1 --street="Royal Avenue" --postcode="XYZ 123" --city=London
+    1 Royal Avenue, London, XYZ 123
+
+    >>> python print_address --number=1 --street="Royal Avenue" --postcode="XYZ 123"
+    1 Royal Avenue, XYZ 123

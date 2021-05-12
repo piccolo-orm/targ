@@ -1,4 +1,6 @@
 import asyncio
+import decimal
+import typing as t
 
 from targ import CLI
 
@@ -44,6 +46,32 @@ def say_hello(name: str, greeting: str = "hello"):
     print(f"{greeting} {name}")
 
 
+# print_address --number=1 --street="Royal Avenue" --postcode="XYZ 123"
+# --city=London
+def print_address(
+    number: int, street: str, postcode: str, city: t.Optional[str] = None
+):
+    """
+    Print out the full address.
+
+    :param number:
+        House number, e.g. 8
+    :street:
+        Street name, e.g. "Royal Avenue"
+    :postcode:
+        e.g. "XYZ 123"
+    :city:
+        e.g. London
+
+    """
+    address = f"{number} {street}"
+    if city is not None:
+        address += f", {city}"
+    address += f", {postcode}"
+
+    print(address)
+
+
 def print_pi(precise: bool = False):
     """
     Print out the digits of Pi.
@@ -58,6 +86,18 @@ def print_pi(precise: bool = False):
 
 
 def compound_interest(interest_rate: float, years: int):
+    """
+    Work out the compound interest over the given number of years.
+
+    :param interest_rate:
+        The annual interest rate e.g. 0.05
+    :param years:
+        The number of years over which to compound.
+    """
+    print(((interest_rate + 1) ** years) - 1)
+
+
+def compound_interest_decimal(interest_rate: decimal.Decimal, years: int):
     """
     Work out the compound interest over the given number of years.
 
@@ -98,7 +138,9 @@ if __name__ == "__main__":
     cli.register(add)
     cli.register(print_pi)
     cli.register(compound_interest)
+    cli.register(compound_interest_decimal)
     cli.register(create, group_name="user")
     cli.register(timer)
     cli.register(add, command_name="sum")
+    cli.register(print_address)
     cli.run()
