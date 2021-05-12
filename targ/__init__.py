@@ -9,12 +9,12 @@ import traceback
 import typing as t
 
 try:
-    from t import get_args, get_origin
+    from typing import get_args, get_origin
 except ImportError:
     # For Python 3.7 support
     from typing_extensions import get_args, get_origin
 
-from docstring_parser import parse, Docstring, DocstringParam
+from docstring_parser import parse, Docstring, DocstringParam  # type: ignore
 
 from .format import Color, format_text, get_underline
 
