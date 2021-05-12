@@ -1,6 +1,7 @@
 from __future__ import annotations
 import asyncio
 from dataclasses import dataclass, field
+import decimal
 import inspect
 import json
 import sys
@@ -13,6 +14,11 @@ from .format import Color, format_text, get_underline
 
 
 __VERSION__ = "0.1.9"
+
+
+# If an annotation is one of these values, we will convert the string value
+# to it.
+CONVERTABLE_TYPES = (int, float, decimal.Decimal)
 
 
 @dataclass
@@ -81,7 +87,7 @@ class Command:
         """
         output = []
 
-        for arg_name, annotation in self.annotations.items():
+        for arg_name, _ in self.annotations.items():
             arg_description = self._get_arg_description(arg_name=arg_name)
 
             arg_default = self._get_arg_default(arg_name=arg_name)
@@ -150,9 +156,16 @@ class Command:
             print("No args")
         print("")
 
+    def _convert_arg_type(self):
+        pass
+
     def call_with(self, arg_class: Arguments):
         """
         Call the command function with the given arguments.
+
+        The arguments are all strings at this point, as they're come from the
+        command line.
+
         """
         if arg_class.kwargs.get("help"):
             self.print_help()
@@ -160,23 +173,34 @@ class Command:
 
         annotations = t.get_type_hints(self.command)
 
-        kwargs = {}
+        kwargs = arg_class.kwargs.copy()
+        for index, value in enumerate(arg_class.args):
+            key = list(annotations.keys())[index]
+            kwargs[key] = value
 
-        for kwarg_key, kwarg_value in arg_class.kwargs.items():
-            annotation = annotations.get(kwarg_key)
+        cleaned_kwargs = {}
+
+        for key, value in kwargs.items():
+            annotation = annotations.get(key)
             # This only works with basic types like str at the moment.
-            if callable(annotation):
-                kwargs[kwarg_key] = annotation(kwarg_value)
 
-        for index, arg in enumerate(arg_class.args):
-            kwarg_key, annotation = list(annotations.items())[index]
-            if callable(annotation):
-                kwargs[kwarg_key] = annotation(arg)
+            if annotation in CONVERTABLE_TYPES:
+                value = annotation(value)
+            elif t.get_origin(annotation) is t.Union:
+                # t.Union is used to detect t.Optional
+                inner_annotations = t.get_args(annotation)
+                filtered = [i for i in inner_annotations if i is not None]
+                if len(filtered) == 1:
+                    annotation = filtered[0]
+                    if annotation in CONVERTABLE_TYPES:
+                        value = annotation(value)
+
+            cleaned_kwargs[key] = value
 
         if inspect.iscoroutinefunction(self.command):
-            asyncio.run(self.command(**kwargs))
+            asyncio.run(self.command(**cleaned_kwargs))
         else:
-            self.command(**kwargs)
+            self.command(**cleaned_kwargs)
 
 
 @dataclass
