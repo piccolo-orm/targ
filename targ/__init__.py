@@ -8,7 +8,13 @@ import sys
 import traceback
 import typing as t
 
-from docstring_parser import parse, Docstring, DocstringParam  # type: ignore
+try:
+    from t import get_args, get_origin
+except ImportError:
+    # For Python 3.7 support
+    from typing_extensions import get_args, get_origin
+
+from docstring_parser import parse, Docstring, DocstringParam
 
 from .format import Color, format_text, get_underline
 
@@ -186,9 +192,9 @@ class Command:
 
             if annotation in CONVERTABLE_TYPES:
                 value = annotation(value)
-            elif t.get_origin(annotation) is t.Union:
+            elif get_origin(annotation) is t.Union:
                 # t.Union is used to detect t.Optional
-                inner_annotations = t.get_args(annotation)
+                inner_annotations = get_args(annotation)
                 filtered = [i for i in inner_annotations if i is not None]
                 if len(filtered) == 1:
                     annotation = filtered[0]
