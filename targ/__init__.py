@@ -9,7 +9,7 @@ import traceback
 import typing as t
 
 try:
-    from typing import get_args, get_origin
+    from typing import get_args, get_origin  # type: ignore
 except ImportError:
     # For Python 3.7 support
     from typing_extensions import get_args, get_origin
