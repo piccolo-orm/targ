@@ -1,3 +1,7 @@
+0.2.0
+=====
+Added support for ``Optional`` and ``Decimal``.
+
 0.1.9
 =====
 Added solo mode.
