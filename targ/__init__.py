@@ -227,6 +227,19 @@ class CLI:
     description: str = "Targ CLI"
     commands: t.List[Command] = field(default_factory=list)
 
+    def command_exists(self, group_name: str, command_name: str) -> bool:
+        """
+        This isn't used by Targ itself, but is useful for third party code
+        which wants to inspect the CLI, so don't remove it.
+        """
+        for command in self.commands:
+            if (
+                command.group_name == group_name
+                and command.command_name == command_name
+            ):
+                return True
+        return False
+
     def _validate_name(self, name: str) -> bool:
         """
         Any custom names provided by user should not contain spaces (i.e.
