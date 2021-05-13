@@ -412,3 +412,28 @@ class CLITest(TestCase):
                 cli.run()
                 print_mock.assert_called_with(config.output)
                 print_mock.reset_mock()
+
+    @patch("targ.CLI.get_cleaned_args")
+    def test_aliases(self, get_cleaned_args):
+        """
+        Make sure commands with aliases can be called correctlyy.
+        """
+
+        def test_command():
+            print("Command called")
+
+        cli = CLI()
+        cli.register(test_command, aliases=["tc"])
+
+        with patch("builtins.print", side_effect=print_) as print_mock:
+
+            configs: t.List[Config] = [
+                Config(params=["test_command"], output="Command called"),
+                Config(params=["tc"], output="Command called"),
+            ]
+
+            for config in configs:
+                get_cleaned_args.return_value = config.params
+                cli.run()
+                print_mock.assert_called_with(config.output)
+                print_mock.reset_mock()
