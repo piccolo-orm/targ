@@ -1,3 +1,7 @@
+0.3.0
+=====
+Added aliases for commands.
+
 0.2.0
 =====
 Added support for ``Optional`` and ``Decimal``.
