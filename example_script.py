@@ -135,7 +135,7 @@ if __name__ == "__main__":
     cli = CLI()
     cli.register(say_hello)
     cli.register(echo)
-    cli.register(add)
+    cli.register(add, aliases=["+"])
     cli.register(print_pi)
     cli.register(compound_interest)
     cli.register(compound_interest_decimal)
