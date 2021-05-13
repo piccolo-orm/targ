@@ -1,3 +1,7 @@
+0.3.3
+=====
+Small help formatting change when a command has no args.
+
 0.3.2
 =====
 Add back `CLI.command_exists` - required by Piccolo.
