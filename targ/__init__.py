@@ -38,6 +38,7 @@ class Command:
     command: t.Callable
     group_name: t.Optional[str] = None
     command_name: t.Optional[str] = None
+    aliases: t.List[str] = field(default_factory=list)
 
     def __post_init__(self):
         self.command_docstring: Docstring = parse(self.command.__doc__)
@@ -223,19 +224,6 @@ class CLI:
     description: str = "Targ CLI"
     commands: t.List[Command] = field(default_factory=list)
 
-    @property
-    def group_names(self) -> t.List[str]:
-        return [i.group_name for i in self.commands if i.group_name]
-
-    def command_exists(self, group_name: str, command_name: str) -> bool:
-        for command in self.commands:
-            if (
-                command.group_name == group_name
-                and command.command_name == command_name
-            ):
-                return True
-        return False
-
     def _validate_name(self, name: str) -> bool:
         """
         Any custom names provided by user should not contain spaces (i.e.
@@ -250,7 +238,7 @@ class CLI:
         command: t.Callable,
         group_name: t.Optional[str] = None,
         command_name: t.Optional[str] = None,
-        root=False,
+        aliases: t.List[str] = [],
     ):
         """
         Register a function or coroutine as a CLI command.
@@ -266,6 +254,8 @@ class CLI:
             By default, the name of the CLI command will be the same as the
             function or coroutine which is being called. You can override this
             here.
+        :param aliases:
+            The command can also be accessed using these aliases.
 
         """
         if group_name and not self._validate_name(group_name):
@@ -279,6 +269,7 @@ class CLI:
                 command=command,
                 group_name=group_name,
                 command_name=command_name,
+                aliases=aliases,
             )
         )
 
@@ -314,7 +305,10 @@ class CLI:
         self, command_name: str, group_name: t.Optional[str] = None
     ) -> t.Optional[Command]:
         for command in self.commands:
-            if command.command_name == command_name:
+            if (
+                command.command_name == command_name
+                or command_name in command.aliases
+            ):
                 if group_name and command.group_name != group_name:
                     continue
                 return command

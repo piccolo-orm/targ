@@ -51,6 +51,36 @@ You can also register coroutines, as well as normal functions:
       cli.register(timer)
       cli.run()
 
+Aliases
+-------
+
+You can specify aliases for each command, which can make your CLI more
+convenient to use. For example, an alias could be an abbreviation, or a common
+mispelling.
+
+.. code-block:: python
+
+    from targ import CLI
+
+
+    def add(a: int, b: int):
+        print(a + b)
+
+
+    if __name__ == "__main__":
+        cli = CLI()
+        cli.register(add, aliases=['+', 'sum'])
+        cli.run()
+
+Both of the following will now work:
+
+.. code-block:: bash
+
+    python main.py add 1 1
+    python main.py + 1 1
+    python main.py sum 1 1
+
+
 Groups
 ------
 
