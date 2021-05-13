@@ -1,3 +1,7 @@
+0.3.2
+=====
+Add back `CLI.command_exists` - required by Piccolo.
+
 0.3.1
 =====
 Show aliases in command help text.
