@@ -160,7 +160,7 @@ class Command:
         if self.arguments_description:
             print(self.arguments_description)
         else:
-            print("No args")
+            print("No args\n")
 
         if self.aliases:
             print("Aliases")
