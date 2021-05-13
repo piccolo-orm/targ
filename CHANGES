@@ -1,3 +1,7 @@
+0.3.1
+=====
+Show aliases in command help text.
+
 0.3.0
 =====
 Added aliases for commands.
