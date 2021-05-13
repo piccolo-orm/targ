@@ -161,10 +161,13 @@ class Command:
             print(self.arguments_description)
         else:
             print("No args")
-        print("")
 
-    def _convert_arg_type(self):
-        pass
+        if self.aliases:
+            print("Aliases")
+            print(get_underline(7, character="-"))
+            alias_string = ", ".join(self.aliases)
+            print(format_text(alias_string, color=Color.green))
+        print("")
 
     def call_with(self, arg_class: Arguments):
         """
