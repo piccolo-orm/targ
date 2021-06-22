@@ -1,3 +1,8 @@
+0.3.4
+=====
+Commands will now work if the type annotation of an argument is missing - in
+this case the type of the argument is assumed to be a string.
+
 0.3.3
 =====
 Small help formatting change when a command has no args.
