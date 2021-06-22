@@ -416,7 +416,7 @@ class CLITest(TestCase):
     @patch("targ.CLI.get_cleaned_args")
     def test_aliases(self, get_cleaned_args):
         """
-        Make sure commands with aliases can be called correctlyy.
+        Make sure commands with aliases can be called correctly.
         """
 
         def test_command():
@@ -430,6 +430,31 @@ class CLITest(TestCase):
             configs: t.List[Config] = [
                 Config(params=["test_command"], output="Command called"),
                 Config(params=["tc"], output="Command called"),
+            ]
+
+            for config in configs:
+                get_cleaned_args.return_value = config.params
+                cli.run()
+                print_mock.assert_called_with(config.output)
+                print_mock.reset_mock()
+
+    @patch("targ.CLI.get_cleaned_args")
+    def test_no_type_annotations(self, get_cleaned_args):
+        """
+        Make sure a command with no type annotations still works - the
+        arguments passed to the function will just be strings.
+        """
+
+        def test_command(name):
+            print(name)
+
+        cli = CLI()
+        cli.register(test_command)
+
+        with patch("builtins.print", side_effect=print_) as print_mock:
+
+            configs: t.List[Config] = [
+                Config(params=["test_command", "hello"], output="hello"),
             ]
 
             for config in configs:

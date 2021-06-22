@@ -185,7 +185,7 @@ class Command:
 
         kwargs = arg_class.kwargs.copy()
         for index, value in enumerate(arg_class.args):
-            key = list(annotations.keys())[index]
+            key = inspect.getfullargspec(self.command).args[index]
             kwargs[key] = value
 
         cleaned_kwargs = {}
