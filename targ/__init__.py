@@ -1,12 +1,13 @@
 from __future__ import annotations
+
 import asyncio
-from dataclasses import dataclass, field
 import decimal
 import inspect
 import json
 import sys
 import traceback
 import typing as t
+from dataclasses import dataclass, field
 
 try:
     from typing import get_args, get_origin  # type: ignore
@@ -14,10 +15,9 @@ except ImportError:
     # For Python 3.7 support
     from typing_extensions import get_args, get_origin
 
-from docstring_parser import parse, Docstring, DocstringParam  # type: ignore
+from docstring_parser import Docstring, DocstringParam, parse  # type: ignore
 
 from .format import Color, format_text, get_underline
-
 
 __VERSION__ = "0.3.4"
 

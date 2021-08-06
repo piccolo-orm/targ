@@ -1,9 +1,9 @@
 import dataclasses
 import decimal
-from unittest import TestCase
-from unittest.mock import MagicMock, patch
 import sys
 import typing as t
+from unittest import TestCase
+from unittest.mock import MagicMock, patch
 
 from targ import CLI
 
@@ -229,7 +229,8 @@ class CLITest(TestCase):
 
             configs: t.List[Config] = [
                 Config(
-                    params=["test_command", "--arg1"], output="arg1 is True",
+                    params=["test_command", "--arg1"],
+                    output="arg1 is True",
                 ),
                 Config(
                     params=["test_command", "--arg1=True"],
@@ -240,7 +241,8 @@ class CLITest(TestCase):
                     output="arg1 is True",
                 ),
                 Config(
-                    params=["test_command", "--arg1=t"], output="arg1 is True",
+                    params=["test_command", "--arg1=t"],
+                    output="arg1 is True",
                 ),
                 Config(
                     params=["test_command", "--arg1=False"],
@@ -284,9 +286,13 @@ class CLITest(TestCase):
         with patch("builtins.print", side_effect=print_) as print_mock:
 
             configs: t.List[Config] = [
-                Config(params=["test_command", "1"], output="arg1 is int",),
                 Config(
-                    params=["test_command", "--arg1=1"], output="arg1 is int",
+                    params=["test_command", "1"],
+                    output="arg1 is int",
+                ),
+                Config(
+                    params=["test_command", "--arg1=1"],
+                    output="arg1 is int",
                 ),
             ]
 
@@ -318,7 +324,8 @@ class CLITest(TestCase):
 
             configs: t.List[Config] = [
                 Config(
-                    params=["test_command", "1.11"], output="arg1 is Decimal",
+                    params=["test_command", "1.11"],
+                    output="arg1 is Decimal",
                 ),
                 Config(
                     params=["test_command", "--arg1=1.11"],
@@ -354,7 +361,8 @@ class CLITest(TestCase):
 
             configs: t.List[Config] = [
                 Config(
-                    params=["test_command", "1.11"], output="arg1 is float",
+                    params=["test_command", "1.11"],
+                    output="arg1 is float",
                 ),
                 Config(
                     params=["test_command", "--arg1=1.11"],
