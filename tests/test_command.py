@@ -470,3 +470,40 @@ class CLITest(TestCase):
                 cli.run()
                 print_mock.assert_called_with(config.output)
                 print_mock.reset_mock()
+
+    @patch("targ.CLI.get_cleaned_args")
+    def test_traceback(self, get_cleaned_args):
+        """
+        Make sure the --trace option works.
+        """
+
+        def test_command():
+            print("Command called")
+
+        def test_exception():
+            raise Exception("Bad things")
+
+        cli = CLI()
+        cli.register(test_command)
+        cli.register(test_exception)
+
+        with patch("builtins.print", side_effect=print_) as print_mock:
+
+            # Make sure commands work as usual if no exceptions are raised.
+            config = Config(
+                params=["test_command", "--trace"], output="Command called"
+            )
+            get_cleaned_args.return_value = config.params
+            cli.run()
+            print_mock.assert_called_with(config.output)
+            print_mock.reset_mock()
+
+            # Make sure a traceback is shown if an exception is raised.
+            with patch("targ.traceback.format_exc") as traceback_mock:
+                with self.assertRaises(SystemExit):
+                    get_cleaned_args.return_value = [
+                        "test_exception",
+                        "--trace",
+                    ]
+                    cli.run()
+                    traceback_mock.assert_called_once()
