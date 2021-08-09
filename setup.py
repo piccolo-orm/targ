@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import os
+
 from setuptools import setup
 
 from targ import __VERSION__ as VERSION
-
 
 directory = os.path.abspath(os.path.dirname(__file__))
 
@@ -14,7 +14,7 @@ with open(os.path.join(directory, "README.md")) as f:
     LONG_DESCRIPTION = f.read()
 
 
-with open(os.path.join(directory, "requirements.txt")) as f:
+with open(os.path.join(directory, "requirements/requirements.txt")) as f:
     contents = f.read()
     REQUIREMENTS = [i.strip() for i in contents.strip().split("\n")]
 
