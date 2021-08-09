@@ -1,3 +1,8 @@
+0.3.5
+=====
+Fixing a bug with the ``--trace`` option, which outputs a traceback if an
+exception occurs.
+
 0.3.4
 =====
 Commands will now work if the type annotation of an argument is missing - in
