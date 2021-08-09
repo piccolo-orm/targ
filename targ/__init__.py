@@ -377,6 +377,15 @@ class CLI:
         cleaned_args = self.get_cleaned_args()
         command: t.Optional[Command] = None
 
+        # Work out if to enable tracebacks
+        try:
+            index = cleaned_args.index("--trace")
+        except ValueError:
+            trace = False
+        else:
+            cleaned_args.pop(index)
+            trace = True
+
         if solo:
             if not self._can_run_in_solo_mode:
                 print(
@@ -416,7 +425,7 @@ class CLI:
                 print(format_text("The command failed.", color=Color.red))
                 print(exception)
 
-                if "--trace" in cleaned_args:
+                if trace:
                     print(traceback.format_exc())
 
                 command.print_help()
