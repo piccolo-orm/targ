@@ -33,7 +33,7 @@ setup(
     python_requires=">=3.7.0",
     url="https://github.com/piccolo-orm/targ/",
     packages=["targ"],
-    package_data={"targ": ["py.typed"]},
+    include_package_data=True,
     install_requires=REQUIREMENTS,
     license="MIT",
     classifiers=[
