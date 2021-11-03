@@ -75,3 +75,4 @@ To get documentation:
    cli.rst
    related_projects.rst
    alternatives.rst
+   changes.rst
