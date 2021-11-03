@@ -14,6 +14,8 @@ You should specify a type annotation for each function argument, so Targ can
 convert the input it receives from the command line into the correct type.
 Otherwise, the type is assumed to be a string.
 
+-------------------------------------------------------------------------------
+
 str
 ---
 
@@ -39,6 +41,8 @@ When your string contains spaces, use quotation marks:
     >>> python main.py say_hello --name="bob jones"
     'bob jones'
 
+-------------------------------------------------------------------------------
+
 int
 ---
 
@@ -56,6 +60,8 @@ Example usage:
 
     >>> python main.py add --a=1 --b=2
     3
+
+-------------------------------------------------------------------------------
 
 bool
 ----
@@ -84,13 +90,15 @@ Example usage:
     >>> python main.py print_pi --precise=true
     3.14159265
 
-You can use `t` as an alias for `true`, and likewise `f` as an alias for
-`false`.
+You can use ``t`` as an alias for ``true``, and likewise ``f`` as an alias for
+``false``.
 
 .. code-block:: bash
 
     >>> python main.py print_pi --precise=t
     3.14159265
+
+-------------------------------------------------------------------------------
 
 float
 -----
@@ -106,6 +114,8 @@ Example usage:
 
     >>> python main.py compound_interest 0.05 5
     0.27628156250000035
+
+-------------------------------------------------------------------------------
 
 Decimal
 -------
@@ -123,6 +133,8 @@ Example usage:
 
     >>> python main.py compound_interest 0.05 5
     0.2762815625
+
+-------------------------------------------------------------------------------
 
 Optional
 --------

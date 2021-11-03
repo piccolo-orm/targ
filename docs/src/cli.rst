@@ -4,10 +4,10 @@ CLI
 Registering functions
 ---------------------
 
-Once you've defined your functions, you need to register them with a `CLI`
+Once you've defined your functions, you need to register them with a ``CLI``
 instance.
 
-You can register as many functions as you like with the `CLI` instance.
+You can register as many functions as you like with the ``CLI`` instance.
 
 .. code-block:: python
 
@@ -27,6 +27,8 @@ You can register as many functions as you like with the `CLI` instance.
         cli.register(add)
         cli.register(subtract)
         cli.run()
+
+-------------------------------------------------------------------------------
 
 Coroutines
 ----------
@@ -50,6 +52,8 @@ You can also register coroutines, as well as normal functions:
       cli = CLI()
       cli.register(timer)
       cli.run()
+
+-------------------------------------------------------------------------------
 
 Aliases
 -------
@@ -80,6 +84,7 @@ Both of the following will now work:
     python main.py + 1 1
     python main.py sum 1 1
 
+-------------------------------------------------------------------------------
 
 Groups
 ------
@@ -98,6 +103,8 @@ And then call them as follows:
     python main.py greetings say_hello 'bob'
     python main.py maths add 1 2
 
+-------------------------------------------------------------------------------
+
 Overriding the command name
 ---------------------------
 
@@ -108,15 +115,19 @@ However, you can choose to override it:
 
     cli.register(add, command_name='sum')
 
+-------------------------------------------------------------------------------
+
 Traceback
 ---------
 
-By default, targ will print out an abbreviated error message if it encounters
-a problem. To see the full Python traceback, pass in the `trace` argument.
+By default, ``targ`` will print out an abbreviated error message if it encounters
+a problem. To see the full Python traceback, pass in the ``--trace`` argument.
 
 .. code-block:: bash
 
     python main.py maths add 1 'abc' --trace
+
+-------------------------------------------------------------------------------
 
 Solo mode
 ---------
@@ -143,3 +154,13 @@ You can then omit the command name:
 .. code-block:: bash
 
     python main.py 1 1
+
+-------------------------------------------------------------------------------
+
+Source
+------
+
+.. currentmodule:: targ
+
+.. autoclass:: CLI
+    :members:

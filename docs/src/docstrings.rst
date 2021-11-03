@@ -6,6 +6,8 @@ Docstrings are used to document your CLI.
 ReST-style and Google-style docstrings are supported - use whichever you
 prefer the look of, as functionally they are basically the same.
 
+-------------------------------------------------------------------------------
+
 ReST
 ----
 
@@ -19,6 +21,8 @@ ReST
 
         """
         print(f'hello {name}')
+
+-------------------------------------------------------------------------------
 
 Google
 ------
@@ -35,6 +39,8 @@ Google
 
         """
         print(f'hello {name}')
+
+-------------------------------------------------------------------------------
 
 Output
 ------
