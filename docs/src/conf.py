@@ -39,3 +39,6 @@ extensions = ["sphinx.ext.autodoc"]
 # a list of builtin themes.
 #
 html_theme = "sphinx_rtd_theme"
+html_logo = "logo.png"
+
+html_theme_options = {"logo_only": True}
