@@ -28,4 +28,4 @@ jobs:
       - name: Lint
         run: ./scripts/lint.sh
       - name: Tests
-        run: ./scripts/tests.sh
+        run: ./scripts/run-tests.sh
