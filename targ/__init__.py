@@ -58,7 +58,7 @@ class Command:
 
     @property
     def description(self) -> str:
-        docstring: Docstring = parse(self.command.__doc__)
+        docstring: Docstring = parse(self.command.__doc__ or "")
         return " ".join(
             [
                 docstring.short_description or "",
@@ -75,7 +75,7 @@ class Command:
     def _get_arg_description(self, arg_name: str) -> str:
         docstring_param = self._get_docstring_param(arg_name)
         if docstring_param:
-            return docstring_param.description
+            return docstring_param.description or ""
         else:
             return ""
 
