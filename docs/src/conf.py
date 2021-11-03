@@ -10,15 +10,17 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import datetime
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath("../.."))
 
 
 # -- Project information -----------------------------------------------------
 
 project = "Targ"
-copyright = "2020, Daniel Townsend"
+copyright = f"{datetime.datetime.now().year}, Daniel Townsend"
 author = "Daniel Townsend"
 
 
@@ -29,6 +31,7 @@ author = "Daniel Townsend"
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
+extensions = ["sphinx.ext.autodoc"]
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -36,3 +39,6 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # a list of builtin themes.
 #
 html_theme = "sphinx_rtd_theme"
+html_logo = "logo.png"
+
+html_theme_options = {"logo_only": True}

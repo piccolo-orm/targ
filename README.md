@@ -1,3 +1,5 @@
+![Logo](docs/logo_hero.png?raw=true "Targ Logo")
+
 # targ
 
 Build a Python CLI for your app, just using type hints and docstrings.
