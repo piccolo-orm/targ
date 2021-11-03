@@ -1,6 +1,10 @@
 Changes
 =======
 
+0.3.6
+-----
+Added Python 3.10 support.
+
 0.3.5
 -----
 Fixing a bug with the ``--trace`` option, which outputs a traceback if an
