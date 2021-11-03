@@ -196,7 +196,7 @@ class Command:
 
             if annotation in CONVERTABLE_TYPES:
                 value = annotation(value)
-            elif get_origin(annotation) is t.Union:
+            elif get_origin(annotation) is t.Union:  # type: ignore
                 # t.Union is used to detect t.Optional
                 inner_annotations = get_args(annotation)
                 filtered = [i for i in inner_annotations if i is not None]
@@ -220,17 +220,24 @@ class CLI:
 
     Example usage:
 
-    cli = CLI()
-    cli.register(some_function)
+    .. code-block:: python
+
+        cli = CLI()
+        cli.register(some_function)
+
+    :param description:
+        Customise the title of your CLI tool.
+
     """
 
     description: str = "Targ CLI"
-    commands: t.List[Command] = field(default_factory=list)
+    commands: t.List[Command] = field(default_factory=list, init=False)
 
     def command_exists(self, group_name: str, command_name: str) -> bool:
         """
         This isn't used by Targ itself, but is useful for third party code
-        which wants to inspect the CLI, so don't remove it.
+        which wants to inspect the CLI, to find if a command with the given
+        name exists.
         """
         for command in self.commands:
             if (
@@ -264,8 +271,8 @@ class CLI:
         :param group_name:
             If specified, the CLI command will belong to a group. When calling
             a command which belongs to a group, it must be prefixed with the
-            `group_name`. For example
-            `python my_file.py group_name command_name`.
+            ``group_name``. For example
+            ``python my_file.py group_name command_name``.
         :param command_name:
             By default, the name of the CLI command will be the same as the
             function or coroutine which is being called. You can override this
@@ -311,13 +318,13 @@ class CLI:
 
         return "\n".join(lines)
 
-    def get_cleaned_args(self) -> t.List[str]:
+    def _get_cleaned_args(self) -> t.List[str]:
         """
         Remove any redundant arguments.
         """
         return sys.argv[1:]
 
-    def get_command(
+    def _get_command(
         self, command_name: str, group_name: t.Optional[str] = None
     ) -> t.Optional[Command]:
         for command in self.commands:
@@ -337,7 +344,7 @@ class CLI:
             return False
         return value
 
-    def get_arg_class(self, args: t.List[str]) -> Arguments:
+    def _get_arg_class(self, args: t.List[str]) -> Arguments:
         arguments = Arguments()
         for arg_str in args:
             if arg_str.startswith("--"):
@@ -367,14 +374,14 @@ class CLI:
 
         :param solo:
             By default, a command name must be given when running the CLI, for
-            example `python my_file.py command_name`. In some situations, you
+            example ``python my_file.py command_name``. In some situations, you
             may only have a single command registered with the CLI, so passing
-            in the command name is redundant. If `solo=True`, you can omit the
-            command name i.e. `python my_file.py`, and Targ will automatically
-            call the single registered command.
+            in the command name is redundant. If ``solo=True``, you can omit
+            the command name i.e. ``python my_file.py``, and Targ will
+            automatically call the single registered command.
 
         """
-        cleaned_args = self.get_cleaned_args()
+        cleaned_args = self._get_cleaned_args()
         command: t.Optional[Command] = None
 
         # Work out if to enable tracebacks
@@ -402,7 +409,7 @@ class CLI:
                 return
 
             command_name = cleaned_args[0]
-            command = self.get_command(command_name=command_name)
+            command = self._get_command(command_name=command_name)
             if command:
                 cleaned_args = cleaned_args[1:]
 
@@ -411,7 +418,7 @@ class CLI:
             if len(cleaned_args) >= 2:
                 group_name = cleaned_args[0]
                 command_name = cleaned_args[1]
-                command = self.get_command(
+                command = self._get_command(
                     command_name=command_name, group_name=group_name
                 )
                 if command:
@@ -419,7 +426,7 @@ class CLI:
 
         if command:
             try:
-                arg_class = self.get_arg_class(cleaned_args)
+                arg_class = self._get_arg_class(cleaned_args)
                 command.call_with(arg_class)
             except Exception as exception:
                 print(format_text("The command failed.", color=Color.red))

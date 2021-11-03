@@ -42,12 +42,12 @@ class CLITest(TestCase):
         self.assertTrue(len(cli.commands) == 1)
         self.assertTrue(cli.commands[0].command is add)
 
-    @patch("targ.CLI.get_cleaned_args")
-    def test_run(self, get_cleaned_args: MagicMock):
+    @patch("targ.CLI._get_cleaned_args")
+    def test_run(self, _get_cleaned_args: MagicMock):
         """
         Make sure a command is run correctly.
         """
-        get_cleaned_args.return_value = ["add", "1", "2"]
+        _get_cleaned_args.return_value = ["add", "1", "2"]
         cli = CLI()
         cli.register(add)
 
@@ -55,12 +55,12 @@ class CLITest(TestCase):
             cli.run()
             print_mock.assert_called_with(3)
 
-    @patch("targ.CLI.get_cleaned_args")
-    def test_run_solo(self, get_cleaned_args: MagicMock):
+    @patch("targ.CLI._get_cleaned_args")
+    def test_run_solo(self, _get_cleaned_args: MagicMock):
         """
         Make sure a command is run correctly, when the CLI is in solo mode.
         """
-        get_cleaned_args.return_value = ["1", "2"]
+        _get_cleaned_args.return_value = ["1", "2"]
         cli = CLI()
         cli.register(add)
 
@@ -68,13 +68,13 @@ class CLITest(TestCase):
             cli.run(solo=True)
             print_mock.assert_called_with(3)
 
-    @patch("targ.CLI.get_cleaned_args")
-    def test_run_group(self, get_cleaned_args: MagicMock):
+    @patch("targ.CLI._get_cleaned_args")
+    def test_run_group(self, _get_cleaned_args: MagicMock):
         """
         Make sure a command is run correctly, when the command has been
         registered in a group.
         """
-        get_cleaned_args.return_value = ["math", "add", "1", "2"]
+        _get_cleaned_args.return_value = ["math", "add", "1", "2"]
         cli = CLI()
         cli.register(add, group_name="math")
 
@@ -102,12 +102,12 @@ class CLITest(TestCase):
         # Shouldn't raise an exception
         CLI().register(add, command_name="my_command")
 
-    @patch("targ.CLI.get_cleaned_args")
-    def test_no_command(self, get_cleaned_args):
+    @patch("targ.CLI._get_cleaned_args")
+    def test_no_command(self, _get_cleaned_args):
         """
         If no command name is given, then help text should be shown.
         """
-        get_cleaned_args.return_value = []
+        _get_cleaned_args.return_value = []
         cli = CLI()
         cli.register(add)
 
@@ -119,12 +119,12 @@ class CLITest(TestCase):
         # are raised
         cli.run()
 
-    @patch("targ.CLI.get_cleaned_args")
-    def test_help_flag(self, get_cleaned_args):
+    @patch("targ.CLI._get_cleaned_args")
+    def test_help_flag(self, _get_cleaned_args):
         """
         If the --help flag is passed in, then help text should be shown.
         """
-        get_cleaned_args.return_value = ["add", "--help"]
+        _get_cleaned_args.return_value = ["add", "--help"]
         cli = CLI()
         cli.register(add)
 
@@ -136,8 +136,8 @@ class CLITest(TestCase):
         # are raised
         cli.run()
 
-    @patch("targ.CLI.get_cleaned_args")
-    def test_bool_arg(self, get_cleaned_args):
+    @patch("targ.CLI._get_cleaned_args")
+    def test_bool_arg(self, _get_cleaned_args):
         """
         Test the different formats for boolean flags.
         """
@@ -198,13 +198,13 @@ class CLITest(TestCase):
             ]
 
             for config in configs:
-                get_cleaned_args.return_value = config.params
+                _get_cleaned_args.return_value = config.params
                 cli.run()
                 print_mock.assert_called_with(config.output)
                 print_mock.reset_mock()
 
-    @patch("targ.CLI.get_cleaned_args")
-    def test_optional_bool_arg(self, get_cleaned_args):
+    @patch("targ.CLI._get_cleaned_args")
+    def test_optional_bool_arg(self, _get_cleaned_args):
         """
         Test command arguments which are of type Optional[bool].
         """
@@ -260,13 +260,13 @@ class CLITest(TestCase):
             ]
 
             for config in configs:
-                get_cleaned_args.return_value = config.params
+                _get_cleaned_args.return_value = config.params
                 cli.run()
                 print_mock.assert_called_with(config.output)
                 print_mock.reset_mock()
 
-    @patch("targ.CLI.get_cleaned_args")
-    def test_int_arg(self, get_cleaned_args):
+    @patch("targ.CLI._get_cleaned_args")
+    def test_int_arg(self, _get_cleaned_args):
         """
         Test command arguments which are of type int.
         """
@@ -297,13 +297,13 @@ class CLITest(TestCase):
             ]
 
             for config in configs:
-                get_cleaned_args.return_value = config.params
+                _get_cleaned_args.return_value = config.params
                 cli.run()
                 print_mock.assert_called_with(config.output)
                 print_mock.reset_mock()
 
-    @patch("targ.CLI.get_cleaned_args")
-    def test_decimal_arg(self, get_cleaned_args):
+    @patch("targ.CLI._get_cleaned_args")
+    def test_decimal_arg(self, _get_cleaned_args):
         """
         Test command arguments which are of type Decimal.
         """
@@ -334,13 +334,13 @@ class CLITest(TestCase):
             ]
 
             for config in configs:
-                get_cleaned_args.return_value = config.params
+                _get_cleaned_args.return_value = config.params
                 cli.run()
                 print_mock.assert_called_with(config.output)
                 print_mock.reset_mock()
 
-    @patch("targ.CLI.get_cleaned_args")
-    def test_float_arg(self, get_cleaned_args):
+    @patch("targ.CLI._get_cleaned_args")
+    def test_float_arg(self, _get_cleaned_args):
         """
         Test command arguments which are of type float.
         """
@@ -371,13 +371,13 @@ class CLITest(TestCase):
             ]
 
             for config in configs:
-                get_cleaned_args.return_value = config.params
+                _get_cleaned_args.return_value = config.params
                 cli.run()
                 print_mock.assert_called_with(config.output)
                 print_mock.reset_mock()
 
-    @patch("targ.CLI.get_cleaned_args")
-    def test_mixed_args(self, get_cleaned_args):
+    @patch("targ.CLI._get_cleaned_args")
+    def test_mixed_args(self, _get_cleaned_args):
         """
         Test command arguments which are of multiple different types.
         """
@@ -416,13 +416,13 @@ class CLITest(TestCase):
             ]
 
             for config in configs:
-                get_cleaned_args.return_value = config.params
+                _get_cleaned_args.return_value = config.params
                 cli.run()
                 print_mock.assert_called_with(config.output)
                 print_mock.reset_mock()
 
-    @patch("targ.CLI.get_cleaned_args")
-    def test_aliases(self, get_cleaned_args):
+    @patch("targ.CLI._get_cleaned_args")
+    def test_aliases(self, _get_cleaned_args):
         """
         Make sure commands with aliases can be called correctly.
         """
@@ -441,13 +441,13 @@ class CLITest(TestCase):
             ]
 
             for config in configs:
-                get_cleaned_args.return_value = config.params
+                _get_cleaned_args.return_value = config.params
                 cli.run()
                 print_mock.assert_called_with(config.output)
                 print_mock.reset_mock()
 
-    @patch("targ.CLI.get_cleaned_args")
-    def test_no_type_annotations(self, get_cleaned_args):
+    @patch("targ.CLI._get_cleaned_args")
+    def test_no_type_annotations(self, _get_cleaned_args):
         """
         Make sure a command with no type annotations still works - the
         arguments passed to the function will just be strings.
@@ -466,13 +466,13 @@ class CLITest(TestCase):
             ]
 
             for config in configs:
-                get_cleaned_args.return_value = config.params
+                _get_cleaned_args.return_value = config.params
                 cli.run()
                 print_mock.assert_called_with(config.output)
                 print_mock.reset_mock()
 
-    @patch("targ.CLI.get_cleaned_args")
-    def test_traceback(self, get_cleaned_args):
+    @patch("targ.CLI._get_cleaned_args")
+    def test_traceback(self, _get_cleaned_args):
         """
         Make sure the --trace option works.
         """
@@ -493,7 +493,7 @@ class CLITest(TestCase):
             config = Config(
                 params=["test_command", "--trace"], output="Command called"
             )
-            get_cleaned_args.return_value = config.params
+            _get_cleaned_args.return_value = config.params
             cli.run()
             print_mock.assert_called_with(config.output)
             print_mock.reset_mock()
@@ -501,7 +501,7 @@ class CLITest(TestCase):
             # Make sure a traceback is shown if an exception is raised.
             with patch("targ.traceback.format_exc") as traceback_mock:
                 with self.assertRaises(SystemExit):
-                    get_cleaned_args.return_value = [
+                    _get_cleaned_args.return_value = [
                         "test_exception",
                         "--trace",
                     ]
