@@ -1,4 +1,4 @@
-![Logo](docs/logo_hero.png?raw=true "Targ Logo")
+![Logo](https://raw.githubusercontent.com/piccolo-orm/targ/master/docs/logo_hero.png "Targ Logo")
 
 # targ
 
