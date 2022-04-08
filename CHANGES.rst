@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.3.7
+-----
+If an exception is raised when running a command, mention the ``--trace``
+option, which will show a full stack trace.
+
+Added docstring to ``Command``.
+
 0.3.6
 -----
 Added Python 3.10 support.
