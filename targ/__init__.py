@@ -35,6 +35,24 @@ class Arguments:
 
 @dataclass
 class Command:
+    """
+    Represents a CLI command.
+
+    :param command:
+        The Pyton function or coroutine which gets called.
+    :param group_name:
+        Commands can belong to a group. In this situation, the group name must
+        appear before the command name when called from the command line. For
+        example `python my_file.py group_name command_name`.
+    :param command_name:
+        By default the command name is the same as the callable, but it can
+        be overriden here.
+    :param aliases:
+        You can provide aliases, which can be abbreviations or common
+        mispellings. For example, for a `command_name` of ``run``, we could
+        have aliases like ``['start', 'rn']``.
+
+    """
     command: t.Callable
     group_name: t.Optional[str] = None
     command_name: t.Optional[str] = None
@@ -434,6 +452,8 @@ class CLI:
 
                 if trace:
                     print(traceback.format_exc())
+                else:
+                    print("For a full stack trace, use --trace")
 
                 command.print_help()
                 sys.exit(1)

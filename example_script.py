@@ -131,6 +131,14 @@ async def timer(seconds: int):
     print("Finished")
 
 
+def raise_error():
+    """
+    A command which raises an Exception.
+    """
+    print("Raising an exception")
+    raise ValueError("Something went wrong!")
+
+
 if __name__ == "__main__":
     cli = CLI()
     cli.register(say_hello)
@@ -143,4 +151,5 @@ if __name__ == "__main__":
     cli.register(timer)
     cli.register(add, command_name="sum")
     cli.register(print_address)
+    cli.register(raise_error)
     cli.run()
