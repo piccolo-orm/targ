@@ -452,6 +452,8 @@ class CLI:
 
                 if trace:
                     print(traceback.format_exc())
+                else:
+                    print("For a full stack trace, use --trace")
 
                 command.print_help()
                 sys.exit(1)
