@@ -44,5 +44,5 @@ html_logo = "logo-small.png"
 # conf.py
 
 html_theme_options = {
-    "source_url": 'https://github.com/piccolo-orm/piccolo_theme/targ'
+    "source_url": 'https://github.com/piccolo-orm/targ'
 }
