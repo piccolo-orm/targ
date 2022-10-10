@@ -3,12 +3,12 @@ Supported Types
 
 Targ currently supports basic Python types:
 
- * str
- * int
- * bool
- * float
- * Decimal
- * Optional
+* str
+* int
+* bool
+* float
+* Decimal
+* Optional
 
 You should specify a type annotation for each function argument, so Targ can
 convert the input it receives from the command line into the correct type.
