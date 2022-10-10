@@ -76,7 +76,7 @@ mispelling.
         cli.register(add, aliases=['+', 'sum'])
         cli.run()
 
-Both of the following will now work:
+All of the following will now work:
 
 .. code-block:: bash
 
