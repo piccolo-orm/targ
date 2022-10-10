@@ -40,3 +40,6 @@ extensions = ["sphinx.ext.autodoc"]
 #
 html_theme = "piccolo_theme"
 html_logo = "logo-small.png"
+html_theme_options = {
+    "source_url": 'https://github.com/piccolo-orm/targ'
+}
