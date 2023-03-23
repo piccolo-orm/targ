@@ -1,6 +1,10 @@
 Changes
 =======
 
+0.3.8
+-----
+Slackened dependencies to avoid clashes with other libraries, like ``fastkafka``.
+
 0.3.7
 -----
 If an exception is raised when running a command, mention the ``--trace``
