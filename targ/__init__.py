@@ -19,7 +19,7 @@ from docstring_parser import Docstring, DocstringParam, parse  # type: ignore
 
 from .format import Color, format_text, get_underline
 
-__VERSION__ = "0.3.8"
+__VERSION__ = "0.4.0"
 
 
 # If an annotation is one of these values, we will convert the string value

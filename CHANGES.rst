@@ -1,6 +1,12 @@
 Changes
 =======
 
+0.4.0
+-----
+
+General maintenance - dropping Python 3.7 support, adding Python 3.12, updating
+dependencies, and fixing linter errors.
+
 0.3.8
 -----
 Slackened dependencies to avoid clashes with other libraries, like ``fastkafka``.
