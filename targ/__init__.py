@@ -13,7 +13,7 @@ try:
     from typing import get_args, get_origin  # type: ignore
 except ImportError:
     # For Python 3.7 support
-    from typing_extensions import get_args, get_origin
+    from typing_extensions import get_args, get_origin  # type: ignore
 
 from docstring_parser import Docstring, DocstringParam, parse  # type: ignore
 
@@ -53,13 +53,14 @@ class Command:
         have aliases like ``['start', 'rn']``.
 
     """
+
     command: t.Callable
     group_name: t.Optional[str] = None
     command_name: t.Optional[str] = None
     aliases: t.List[str] = field(default_factory=list)
 
-    def __post_init__(self):
-        self.command_docstring: Docstring = parse(self.command.__doc__)
+    def __post_init__(self) -> None:
+        self.command_docstring: Docstring = parse(self.command.__doc__ or "")
         self.annotations = t.get_type_hints(self.command)
         self.signature = inspect.signature(self.command)
         self.solo = False

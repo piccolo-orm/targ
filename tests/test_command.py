@@ -137,7 +137,7 @@ class CLITest(TestCase):
         cli.run()
 
     @patch("targ.CLI._get_cleaned_args")
-    def test_bool_arg(self, _get_cleaned_args):
+    def test_bool_arg(self, _get_cleaned_args: MagicMock):
         """
         Test the different formats for boolean flags.
         """
@@ -204,7 +204,7 @@ class CLITest(TestCase):
                 print_mock.reset_mock()
 
     @patch("targ.CLI._get_cleaned_args")
-    def test_optional_bool_arg(self, _get_cleaned_args):
+    def test_optional_bool_arg(self, _get_cleaned_args: MagicMock):
         """
         Test command arguments which are of type Optional[bool].
         """
@@ -266,7 +266,7 @@ class CLITest(TestCase):
                 print_mock.reset_mock()
 
     @patch("targ.CLI._get_cleaned_args")
-    def test_int_arg(self, _get_cleaned_args):
+    def test_int_arg(self, _get_cleaned_args: MagicMock):
         """
         Test command arguments which are of type int.
         """
@@ -303,7 +303,7 @@ class CLITest(TestCase):
                 print_mock.reset_mock()
 
     @patch("targ.CLI._get_cleaned_args")
-    def test_decimal_arg(self, _get_cleaned_args):
+    def test_decimal_arg(self, _get_cleaned_args: MagicMock):
         """
         Test command arguments which are of type Decimal.
         """
@@ -340,7 +340,7 @@ class CLITest(TestCase):
                 print_mock.reset_mock()
 
     @patch("targ.CLI._get_cleaned_args")
-    def test_float_arg(self, _get_cleaned_args):
+    def test_float_arg(self, _get_cleaned_args: MagicMock):
         """
         Test command arguments which are of type float.
         """
@@ -377,7 +377,7 @@ class CLITest(TestCase):
                 print_mock.reset_mock()
 
     @patch("targ.CLI._get_cleaned_args")
-    def test_mixed_args(self, _get_cleaned_args):
+    def test_mixed_args(self, _get_cleaned_args: MagicMock):
         """
         Test command arguments which are of multiple different types.
         """
@@ -422,7 +422,7 @@ class CLITest(TestCase):
                 print_mock.reset_mock()
 
     @patch("targ.CLI._get_cleaned_args")
-    def test_aliases(self, _get_cleaned_args):
+    def test_aliases(self, _get_cleaned_args: MagicMock):
         """
         Make sure commands with aliases can be called correctly.
         """
@@ -447,7 +447,7 @@ class CLITest(TestCase):
                 print_mock.reset_mock()
 
     @patch("targ.CLI._get_cleaned_args")
-    def test_no_type_annotations(self, _get_cleaned_args):
+    def test_no_type_annotations(self, _get_cleaned_args: MagicMock):
         """
         Make sure a command with no type annotations still works - the
         arguments passed to the function will just be strings.
@@ -472,7 +472,7 @@ class CLITest(TestCase):
                 print_mock.reset_mock()
 
     @patch("targ.CLI._get_cleaned_args")
-    def test_traceback(self, _get_cleaned_args):
+    def test_traceback(self, _get_cleaned_args: MagicMock):
         """
         Make sure the --trace option works.
         """
