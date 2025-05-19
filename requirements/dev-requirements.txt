@@ -4,4 +4,4 @@ isort==5.13.2
 mypy==1.9.0
 twine==5.0.0
 wheel==0.43.0
-setuptools==70.0.0
+setuptools==78.1.1
