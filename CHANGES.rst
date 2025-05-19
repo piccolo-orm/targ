@@ -1,6 +1,12 @@
 Changes
 =======
 
+0.5.0
+-----
+
+General maintenance - dropping Python 3.8 support, adding Python 3.13, and
+updating dependencies.
+
 0.4.0
 -----
 
