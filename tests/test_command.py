@@ -1,7 +1,7 @@
 import dataclasses
 import decimal
 import sys
-import typing as t
+from typing import Any, Optional
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
@@ -15,7 +15,7 @@ def add(a: int, b: int):
     print(a + b)
 
 
-def print_(value: t.Any, *args, **kwargs):
+def print_(value: Any, *args, **kwargs):
     """
     When patching the builtin print statement, this is used as a side effect,
     so we can still use debug statements.
@@ -26,7 +26,7 @@ def print_(value: t.Any, *args, **kwargs):
 
 @dataclasses.dataclass
 class Config:
-    params: t.List[str]
+    params: list[str]
     output: str
 
 
@@ -158,7 +158,7 @@ class CLITest(TestCase):
 
         with patch("builtins.print", side_effect=print_) as print_mock:
 
-            configs: t.List[Config] = [
+            configs: list[Config] = [
                 Config(params=["test_command"], output="arg1 is False"),
                 Config(params=["test_command", "f"], output="arg1 is False"),
                 Config(
@@ -209,7 +209,7 @@ class CLITest(TestCase):
         Test command arguments which are of type Optional[bool].
         """
 
-        def test_command(arg1: t.Optional[bool] = None):
+        def test_command(arg1: Optional[bool] = None):
             """
             A command for testing optional boolean arguments.
             """
@@ -227,7 +227,7 @@ class CLITest(TestCase):
 
         with patch("builtins.print", side_effect=print_) as print_mock:
 
-            configs: t.List[Config] = [
+            configs: list[Config] = [
                 Config(
                     params=["test_command", "--arg1"],
                     output="arg1 is True",
@@ -285,7 +285,7 @@ class CLITest(TestCase):
 
         with patch("builtins.print", side_effect=print_) as print_mock:
 
-            configs: t.List[Config] = [
+            configs: list[Config] = [
                 Config(
                     params=["test_command", "1"],
                     output="arg1 is int",
@@ -322,7 +322,7 @@ class CLITest(TestCase):
 
         with patch("builtins.print", side_effect=print_) as print_mock:
 
-            configs: t.List[Config] = [
+            configs: list[Config] = [
                 Config(
                     params=["test_command", "1.11"],
                     output="arg1 is Decimal",
@@ -359,7 +359,7 @@ class CLITest(TestCase):
 
         with patch("builtins.print", side_effect=print_) as print_mock:
 
-            configs: t.List[Config] = [
+            configs: list[Config] = [
                 Config(
                     params=["test_command", "1.11"],
                     output="arg1 is float",
@@ -396,7 +396,7 @@ class CLITest(TestCase):
 
         with patch("builtins.print", side_effect=print_) as print_mock:
 
-            configs: t.List[Config] = [
+            configs: list[Config] = [
                 Config(
                     params=["test_command", "1.11", "true"],
                     output="arg1 is float, arg2 is bool",
@@ -435,7 +435,7 @@ class CLITest(TestCase):
 
         with patch("builtins.print", side_effect=print_) as print_mock:
 
-            configs: t.List[Config] = [
+            configs: list[Config] = [
                 Config(params=["test_command"], output="Command called"),
                 Config(params=["tc"], output="Command called"),
             ]
@@ -461,7 +461,7 @@ class CLITest(TestCase):
 
         with patch("builtins.print", side_effect=print_) as print_mock:
 
-            configs: t.List[Config] = [
+            configs: list[Config] = [
                 Config(params=["test_command", "hello"], output="hello"),
             ]
 

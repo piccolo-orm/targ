@@ -6,20 +6,15 @@ import inspect
 import json
 import sys
 import traceback
-import typing as t
+from collections.abc import Callable
 from dataclasses import dataclass, field
-
-try:
-    from typing import get_args, get_origin  # type: ignore
-except ImportError:
-    # For Python 3.7 support
-    from typing_extensions import get_args, get_origin  # type: ignore
+from typing import Any, Optional, Union, get_args, get_origin, get_type_hints
 
 from docstring_parser import Docstring, DocstringParam, parse  # type: ignore
 
 from .format import Color, format_text, get_underline
 
-__VERSION__ = "0.5.0"
+__VERSION__ = "0.6.0"
 
 
 # If an annotation is one of these values, we will convert the string value
@@ -29,8 +24,8 @@ CONVERTABLE_TYPES = (int, float, decimal.Decimal)
 
 @dataclass
 class Arguments:
-    args: t.List[str] = field(default_factory=list)
-    kwargs: t.Dict[str, t.Any] = field(default_factory=dict)
+    args: list[str] = field(default_factory=list)
+    kwargs: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -54,14 +49,14 @@ class Command:
 
     """
 
-    command: t.Callable
-    group_name: t.Optional[str] = None
-    command_name: t.Optional[str] = None
-    aliases: t.List[str] = field(default_factory=list)
+    command: Callable
+    group_name: Optional[str] = None
+    command_name: Optional[str] = None
+    aliases: list[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         self.command_docstring: Docstring = parse(self.command.__doc__ or "")
-        self.annotations = t.get_type_hints(self.command)
+        self.annotations = get_type_hints(self.command)
         self.signature = inspect.signature(self.command)
         self.solo = False
         if not self.command_name:
@@ -85,7 +80,7 @@ class Command:
             ]
         )
 
-    def _get_docstring_param(self, arg_name) -> t.Optional[DocstringParam]:
+    def _get_docstring_param(self, arg_name) -> Optional[DocstringParam]:
         for param in self.command_docstring.params:
             if param.arg_name == arg_name:
                 return param
@@ -200,7 +195,7 @@ class Command:
             self.print_help()
             return
 
-        annotations = t.get_type_hints(self.command)
+        annotations = get_type_hints(self.command)
 
         kwargs = arg_class.kwargs.copy()
         for index, value in enumerate(arg_class.args):
@@ -215,8 +210,8 @@ class Command:
 
             if annotation in CONVERTABLE_TYPES:
                 value = annotation(value)
-            elif get_origin(annotation) is t.Union:  # type: ignore
-                # t.Union is used to detect t.Optional
+            elif get_origin(annotation) is Union:  # type: ignore
+                # Union is used to detect Optional
                 inner_annotations = get_args(annotation)
                 filtered = [i for i in inner_annotations if i is not None]
                 if len(filtered) == 1:
@@ -250,7 +245,7 @@ class CLI:
     """
 
     description: str = "Targ CLI"
-    commands: t.List[Command] = field(default_factory=list, init=False)
+    commands: list[Command] = field(default_factory=list, init=False)
 
     def command_exists(self, group_name: str, command_name: str) -> bool:
         """
@@ -277,10 +272,10 @@ class CLI:
 
     def register(
         self,
-        command: t.Callable,
-        group_name: t.Optional[str] = None,
-        command_name: t.Optional[str] = None,
-        aliases: t.List[str] = [],
+        command: Callable,
+        group_name: Optional[str] = None,
+        command_name: Optional[str] = None,
+        aliases: list[str] = [],
     ):
         """
         Register a function or coroutine as a CLI command.
@@ -337,15 +332,15 @@ class CLI:
 
         return "\n".join(lines)
 
-    def _get_cleaned_args(self) -> t.List[str]:
+    def _get_cleaned_args(self) -> list[str]:
         """
         Remove any redundant arguments.
         """
         return sys.argv[1:]
 
     def _get_command(
-        self, command_name: str, group_name: t.Optional[str] = None
-    ) -> t.Optional[Command]:
+        self, command_name: str, group_name: Optional[str] = None
+    ) -> Optional[Command]:
         for command in self.commands:
             if (
                 command.command_name == command_name
@@ -356,14 +351,14 @@ class CLI:
                 return command
         return None
 
-    def _clean_cli_argument(self, value: str) -> t.Any:
+    def _clean_cli_argument(self, value: str) -> Any:
         if value in ["True", "true", "t"]:
             return True
         elif value in ["False", "false", "f"]:
             return False
         return value
 
-    def _get_arg_class(self, args: t.List[str]) -> Arguments:
+    def _get_arg_class(self, args: list[str]) -> Arguments:
         arguments = Arguments()
         for arg_str in args:
             if arg_str.startswith("--"):
@@ -401,7 +396,7 @@ class CLI:
 
         """
         cleaned_args = self._get_cleaned_args()
-        command: t.Optional[Command] = None
+        command: Optional[Command] = None
 
         # Work out if to enable tracebacks
         try:
