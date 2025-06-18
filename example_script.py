@@ -1,6 +1,6 @@
 import asyncio
 import decimal
-import typing as t
+from typing import Optional
 
 from targ import CLI
 
@@ -49,7 +49,7 @@ def say_hello(name: str, greeting: str = "hello"):
 # print_address --number=1 --street="Royal Avenue" --postcode="XYZ 123"
 # --city=London
 def print_address(
-    number: int, street: str, postcode: str, city: t.Optional[str] = None
+    number: int, street: str, postcode: str, city: Optional[str] = None
 ):
     """
     Print out the full address.
