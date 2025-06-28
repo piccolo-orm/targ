@@ -1,7 +1,7 @@
 import dataclasses
 import decimal
 import sys
-from typing import Any, Optional
+from typing import Any, Optional, Union
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
@@ -206,64 +206,89 @@ class CLITest(TestCase):
     @patch("targ.CLI._get_cleaned_args")
     def test_optional_bool_arg(self, _get_cleaned_args: MagicMock):
         """
-        Test command arguments which are of type Optional[bool].
+        Test command arguments which are optional booleans.
         """
 
-        def test_command(arg1: Optional[bool] = None):
-            """
-            A command for testing optional boolean arguments.
-            """
-            if arg1 is None:
+        def print_arg(arg):
+            if arg is None:
                 print("arg1 is None")
-            elif arg1 is True:
+            elif arg is True:
                 print("arg1 is True")
-            elif arg1 is False:
+            elif arg is False:
                 print("arg1 is False")
             else:
                 raise ValueError("arg1 is the wrong type")
 
+        def test_optional(arg1: Optional[bool] = None):
+            """
+            A command for testing `Optional[bool]` arguments.
+            """
+            print_arg(arg1)
+
+        def test_union(arg1: Union[bool, None] = None):
+            """
+            A command for testing `Union[bool, None]` arguments.
+            """
+            print_arg(arg1)
+
+        commands = [test_optional, test_union]
+
+        if sys.version_info.major == 3 and sys.version_info.minor >= 10:
+
+            def test_union_syntax(arg1: bool | None = None):
+                """
+                A command for testing `bool | None` arguments.
+                """
+                print_arg(arg1)
+
+            commands.append(test_union_syntax)
+
         cli = CLI()
-        cli.register(test_command)
+
+        for command in commands:
+            cli.register(command)
 
         with patch("builtins.print", side_effect=print_) as print_mock:
+            for command in commands:
+                command_name = command.__name__
 
-            configs: list[Config] = [
-                Config(
-                    params=["test_command", "--arg1"],
-                    output="arg1 is True",
-                ),
-                Config(
-                    params=["test_command", "--arg1=True"],
-                    output="arg1 is True",
-                ),
-                Config(
-                    params=["test_command", "--arg1=true"],
-                    output="arg1 is True",
-                ),
-                Config(
-                    params=["test_command", "--arg1=t"],
-                    output="arg1 is True",
-                ),
-                Config(
-                    params=["test_command", "--arg1=False"],
-                    output="arg1 is False",
-                ),
-                Config(
-                    params=["test_command", "--arg1=false"],
-                    output="arg1 is False",
-                ),
-                Config(
-                    params=["test_command", "--arg1=f"],
-                    output="arg1 is False",
-                ),
-                Config(params=["test_command"], output="arg1 is None"),
-            ]
+                configs: list[Config] = [
+                    Config(
+                        params=[command_name, "--arg1"],
+                        output="arg1 is True",
+                    ),
+                    Config(
+                        params=[command_name, "--arg1=True"],
+                        output="arg1 is True",
+                    ),
+                    Config(
+                        params=[command_name, "--arg1=true"],
+                        output="arg1 is True",
+                    ),
+                    Config(
+                        params=[command_name, "--arg1=t"],
+                        output="arg1 is True",
+                    ),
+                    Config(
+                        params=[command_name, "--arg1=False"],
+                        output="arg1 is False",
+                    ),
+                    Config(
+                        params=[command_name, "--arg1=false"],
+                        output="arg1 is False",
+                    ),
+                    Config(
+                        params=[command_name, "--arg1=f"],
+                        output="arg1 is False",
+                    ),
+                    Config(params=[command_name], output="arg1 is None"),
+                ]
 
-            for config in configs:
-                _get_cleaned_args.return_value = config.params
-                cli.run()
-                print_mock.assert_called_with(config.output)
-                print_mock.reset_mock()
+                for config in configs:
+                    _get_cleaned_args.return_value = config.params
+                    cli.run()
+                    print_mock.assert_called_with(config.output)
+                    print_mock.reset_mock()
 
     @patch("targ.CLI._get_cleaned_args")
     def test_int_arg(self, _get_cleaned_args: MagicMock):
@@ -301,6 +326,67 @@ class CLITest(TestCase):
                 cli.run()
                 print_mock.assert_called_with(config.output)
                 print_mock.reset_mock()
+
+    @patch("targ.CLI._get_cleaned_args")
+    def test_optional_int_arg(self, _get_cleaned_args: MagicMock):
+        """
+        Test command arguments which are optional int.
+        """
+
+        def print_arg(arg):
+            if arg is None:
+                print("arg1 is None")
+            elif isinstance(arg, int):
+                print("arg1 is an int")
+            else:
+                raise ValueError("arg1 is the wrong type")
+
+        def test_optional(arg1: Optional[int] = None):
+            """
+            A command for testing `Optional[int]` arguments.
+            """
+            print_arg(arg1)
+
+        def test_union(arg1: Union[int, None] = None):
+            """
+            A command for testing `Union[int, None]` arguments.
+            """
+            print_arg(arg1)
+
+        commands = [test_optional, test_union]
+
+        if sys.version_info.major == 3 and sys.version_info.minor >= 10:
+
+            def test_union_syntax(arg1: int | None = None):
+                """
+                A command for testing `int | None` arguments.
+                """
+                print_arg(arg1)
+
+            commands.append(test_union_syntax)
+
+        cli = CLI()
+
+        for command in commands:
+            cli.register(command)
+
+        with patch("builtins.print", side_effect=print_) as print_mock:
+            for command in commands:
+                command_name = command.__name__
+
+                configs: list[Config] = [
+                    Config(
+                        params=[command_name, "--arg1=1"],
+                        output="arg1 is an int",
+                    ),
+                    Config(params=[command_name], output="arg1 is None"),
+                ]
+
+                for config in configs:
+                    _get_cleaned_args.return_value = config.params
+                    cli.run()
+                    print_mock.assert_called_with(config.output)
+                    print_mock.reset_mock()
 
     @patch("targ.CLI._get_cleaned_args")
     def test_decimal_arg(self, _get_cleaned_args: MagicMock):

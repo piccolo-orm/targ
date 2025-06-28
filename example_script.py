@@ -139,6 +139,16 @@ def raise_error():
     raise ValueError("Something went wrong!")
 
 
+def optional_value(value: Optional[int] = None):
+    """
+    A command which accepts an optional value.
+    """
+    if value:
+        print(value + 1)
+    else:
+        print("Unknown")
+
+
 if __name__ == "__main__":
     cli = CLI()
     cli.register(say_hello)
@@ -152,4 +162,5 @@ if __name__ == "__main__":
     cli.register(add, command_name="sum")
     cli.register(print_address)
     cli.register(raise_error)
+    cli.register(optional_value)
     cli.run()
