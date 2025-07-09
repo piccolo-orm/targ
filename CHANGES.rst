@@ -1,6 +1,24 @@
 Changes
 =======
 
+0.6.0
+-----
+
+Modernised the type annotations used in the ``targ`` codebase (e.g. using
+``list[str]`` instead of ``List[str]``). This is possible because we no longer
+support Python 3.8. Thanks to @sinisaos for this.
+
+Added support for the new union syntax (e.g. ``str | None``). So targ now
+works with both of these:
+
+.. code-block:: python
+
+    def say_hello(name: Optional[str]):
+        print(f'Hello {name}' if name else 'Hello')
+
+    def say_hello(name: str | None):
+        print(f'Hello {name}' if name else 'Hello')
+
 0.5.0
 -----
 
