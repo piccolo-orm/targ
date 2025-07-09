@@ -162,3 +162,7 @@ Example usage:
 
     >>> python print_address --number=1 --street="Royal Avenue" --postcode="XYZ 123"
     1 Royal Avenue, XYZ 123
+
+
+.. note::
+    The union syntax in Python 3.10 and above also works, e.g. ``str | None``.
