@@ -14,6 +14,16 @@ from docstring_parser import Docstring, DocstringParam, parse  # type: ignore
 
 from .format import Color, format_text, get_underline
 
+# Only available in Python 3.10 and above:
+try:
+    from types import NoneType, UnionType  # type: ignore
+except ImportError:
+    NoneType = type(None)  # type: ignore
+
+    class UnionType:  # type: ignore
+        pass
+
+
 __VERSION__ = "0.6.0"
 
 
@@ -210,10 +220,10 @@ class Command:
 
             if annotation in CONVERTABLE_TYPES:
                 value = annotation(value)
-            elif get_origin(annotation) is Union:  # type: ignore
+            elif get_origin(annotation) in [Union, UnionType]:  # type: ignore
                 # Union is used to detect Optional
                 inner_annotations = get_args(annotation)
-                filtered = [i for i in inner_annotations if i is not None]
+                filtered = [i for i in inner_annotations if i is not NoneType]
                 if len(filtered) == 1:
                     annotation = filtered[0]
                     if annotation in CONVERTABLE_TYPES:
