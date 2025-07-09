@@ -235,7 +235,7 @@ class CLITest(TestCase):
 
         if sys.version_info.major == 3 and sys.version_info.minor >= 10:
 
-            def test_union_syntax(arg1: bool | None = None):
+            def test_union_syntax(arg1: bool | None = None):  # type: ignore
                 """
                 A command for testing `bool | None` arguments.
                 """
@@ -357,7 +357,7 @@ class CLITest(TestCase):
 
         if sys.version_info.major == 3 and sys.version_info.minor >= 10:
 
-            def test_union_syntax(arg1: int | None = None):
+            def test_union_syntax(arg1: int | None = None):  # type: ignore
                 """
                 A command for testing `int | None` arguments.
                 """

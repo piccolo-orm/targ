@@ -14,8 +14,9 @@ from docstring_parser import Docstring, DocstringParam, parse  # type: ignore
 
 from .format import Color, format_text, get_underline
 
+# Only available in Python 3.10 and above:
 try:
-    from types import NoneType
+    from types import NoneType  # type: ignore
 except ImportError:
     NoneType = type(None)
 
