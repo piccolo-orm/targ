@@ -18,7 +18,7 @@ from .format import Color, format_text, get_underline
 try:
     from types import NoneType  # type: ignore
 except ImportError:
-    NoneType = type(None)
+    NoneType = type(None)  # type: ignore
 
 
 __VERSION__ = "0.6.0"
