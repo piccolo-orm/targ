@@ -13,10 +13,10 @@ works with both of these:
 
 .. code-block:: python
 
-    def say_hello(name: Optional[str]):
+    def say_hello(name: Optional[str] = None):
         print(f'Hello {name}' if name else 'Hello')
 
-    def say_hello(name: str | None):
+    def say_hello(name: str | None = None):
         print(f'Hello {name}' if name else 'Hello')
 
 0.5.0
