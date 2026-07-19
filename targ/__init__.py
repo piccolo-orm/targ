@@ -24,7 +24,7 @@ except ImportError:
         pass
 
 
-__VERSION__ = "0.6.0"
+__VERSION__ = "0.7.0"
 
 
 # If an annotation is one of these values, we will convert the string value

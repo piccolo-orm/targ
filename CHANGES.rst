@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.7.0
+-----
+
+``targ`` now uses ``colorama.just_fix_windows_console()`` instead of
+``colorama.init()``.
+
+Added official Python 3.14 support (thanks to @sinisaos for this).
+
 0.6.0
 -----
 
